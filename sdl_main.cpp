@@ -11,7 +11,7 @@ int userFunc(bool *running)
     return 0;
 }
 
-int main(int , char **) { 
+int main(int argc, char *argv[]) { 
   return lgfx::Panel_sdl::main(userFunc); 
 }
 

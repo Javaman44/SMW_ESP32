@@ -21,6 +21,9 @@ if(NOT SDL2_POPULATED)
   FetchContent_MakeAvailable(SDL2)
 endif()
 
+# Définir la macro SDL_MAIN_HANDLED pour gérer la fonction main par vous-même
+#add_definitions(-DSDL_MAIN_HANDLED)
+
 # LovyanGFX
 set(LOVYANGFX_DIR "lib/LovyanGFX/")
 add_definitions(-DLGFX_SDL)
@@ -48,4 +51,4 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC ${LOVYANGFX_DIR}/src)
 
 # Lier SDL2 et LovyanGFX à l'exécutable
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2) #SDL2::SDL2main)
