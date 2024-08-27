@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(SDL2Project)
 
+# Spécifiez les standards de C++
 set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Inclure FetchContent pour gérer les dépendances
 include(FetchContent)
@@ -20,26 +22,30 @@ if(NOT SDL2_POPULATED)
 endif()
 
 # LovyanGFX
+set(LOVYANGFX_DIR "lib/LovyanGFX/")
 add_definitions(-DLGFX_SDL)
 
-# Spécifier les fichiers sources à compiler
-file(GLOB Target_Files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS 
-    main.cpp
-    lib/LovyanGFX/src/lgfx/Fonts/efont/*.c
-    lib/LovyanGFX/src/lgfx/Fonts/IPA/*.c
-    lib/LovyanGFX/src/lgfx/utility/*.c
-    lib/LovyanGFX/src/lgfx/v1/*.cpp
-    lib/LovyanGFX/src/lgfx/v1/misc/*.cpp
-    lib/LovyanGFX/src/lgfx/v1/panel/Panel_Device.cpp
-    lib/LovyanGFX/src/lgfx/v1/panel/Panel_FrameBufferBase.cpp
-    lib/LovyanGFX/src/lgfx/v1/platforms/sdl/*.cpp
+# Ajouter les fichiers sources de LovyanGFX nécessaires
+file(GLOB LOVYANGFX_SOURCES
+  ${LOVYANGFX_DIR}/src/lgfx/Fonts/efont/*.c
+  ${LOVYANGFX_DIR}/src/lgfx/Fonts/IPA/*.c
+  ${LOVYANGFX_DIR}/src/lgfx/utility/*.c
+  ${LOVYANGFX_DIR}/src/lgfx/v1/*.cpp
+  ${LOVYANGFX_DIR}/src/lgfx/v1/misc/*.cpp
+  ${LOVYANGFX_DIR}/src/lgfx/v1/panel/Panel_Device.cpp
+  ${LOVYANGFX_DIR}/src/lgfx/v1/panel/Panel_FrameBufferBase.cpp
+  ${LOVYANGFX_DIR}/src/lgfx/v1/platforms/sdl/*.cpp
 )
 
-# Créer l'exécutable avec les fichiers sources listés
-add_executable(${PROJECT_NAME} main.cpp ${Target_Files})
+# Définir l'exécutable
+add_executable(${PROJECT_NAME}
+    sdl_main.cpp
+    user_code.cpp
+    ${LOVYANGFX_SOURCES}
+)
 
-# Spécifier les répertoires d'inclusion pour LovyanGFX
-target_include_directories(${PROJECT_NAME} PUBLIC "lib/LovyanGFX/src")
+# Spécifier les répertoires des includes (hpp) pour LovyanGFX
+target_include_directories(${PROJECT_NAME} PUBLIC ${LOVYANGFX_DIR}/src)
 
 # Lier SDL2 et LovyanGFX à l'exécutable
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
