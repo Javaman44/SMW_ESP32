@@ -35,13 +35,11 @@ file(GLOB Target_Files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
     lib/LovyanGFX/src/lgfx/v1/platforms/sdl/*.cpp
 )
 
-
-
 # Créer l'exécutable avec les fichiers sources listés
 add_executable(${PROJECT_NAME} main.cpp ${Target_Files})
 
 # Spécifier les répertoires d'inclusion pour LovyanGFX
-#target_include_directories(${PROJECT_NAME} PUBLIC "lib/LovyanGFX/src")
+target_include_directories(${PROJECT_NAME} PUBLIC "lib/LovyanGFX/src")
 
 # Lier SDL2 et LovyanGFX à l'exécutable
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
