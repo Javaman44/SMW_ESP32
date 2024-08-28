@@ -40,15 +40,22 @@ file(GLOB LOVYANGFX_SOURCES
   ${LOVYANGFX_DIR}/src/lgfx/v1/platforms/sdl/*.cpp
 )
 
+# Récupérer automatiquement tous les fichiers .cpp dans le répertoire src
+file(GLOB_RECURSE PROJECT_SOURCES
+  ${CMAKE_SOURCE_DIR}/src/*.cpp
+)
+
 # Définir l'exécutable
 add_executable(${PROJECT_NAME}
-    sdl_main.cpp
-    user_code.cpp
-    ${LOVYANGFX_SOURCES}
+  ${PROJECT_SOURCES}
+  ${LOVYANGFX_SOURCES}
 )
 
 # Spécifier les répertoires des includes (hpp) pour LovyanGFX
-target_include_directories(${PROJECT_NAME} PUBLIC ${LOVYANGFX_DIR}/src)
+target_include_directories(${PROJECT_NAME} PUBLIC 
+  ${LOVYANGFX_DIR}/src
+  ${CMAKE_SOURCE_DIR}/src
+)
 
 # Lier SDL2 et LovyanGFX à l'exécutable
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2) #SDL2::SDL2main)
