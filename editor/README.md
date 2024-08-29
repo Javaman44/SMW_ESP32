@@ -10,3 +10,6 @@ Open file "level.drawio"
 Open components library "components.drawio":
 - VSCode integration: "import menu"
 - Drawio application: "open a library"
+
+## credits
+assets found at https://www.mariouniverse.com/sprites-snes-smw/
