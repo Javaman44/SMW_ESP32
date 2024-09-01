@@ -1,12 +1,7 @@
-cmake_minimum_required(VERSION 3.15)
 project(SMW_Game)
 
 # Inclure FetchContent pour gérer les dépendances
 include(FetchContent)
-
-# Désactiver les avertissements de dépréciation uniquement pour la configuration de SDL2
-set(previous_developer_warnings ${CMAKE_SUPPRESS_DEVELOPER_WARNINGS})
-set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS TRUE)
 
 # SDL2
 FetchContent_Declare(
@@ -20,9 +15,6 @@ if(NOT SDL2_POPULATED)
   set(BUILD_SHARED_LIBS OFF)  # Désactiver les bibliothèques partagées pour SDL2
   FetchContent_MakeAvailable(SDL2)
 endif()
-
-# Restaurer l'état précédent de `CMAKE_SUPPRESS_DEVELOPER_WARNINGS`
-set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS ${previous_developer_warnings})
 
 # LovyanGFX
 set(LOVYANGFX_DIR "lib/LovyanGFX/")
@@ -58,4 +50,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 # Lier SDL2 et LovyanGFX à l'exécutable
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2) 
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
