@@ -4,6 +4,10 @@ project(SMW_Game)
 # Inclure FetchContent pour gérer les dépendances
 include(FetchContent)
 
+# Désactiver les avertissements de dépréciation uniquement pour la configuration de SDL2
+set(previous_developer_warnings ${CMAKE_SUPPRESS_DEVELOPER_WARNINGS})
+set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS TRUE)
+
 # SDL2
 FetchContent_Declare(
     SDL2
@@ -17,11 +21,8 @@ if(NOT SDL2_POPULATED)
   FetchContent_MakeAvailable(SDL2)
 endif()
 
-# Masquer les warnings pour SDL2
-if(TARGET SDL2)
-  target_compile_options(SDL2 PRIVATE -w)  # Désactiver les avertissements pour GCC
-endif()
-
+# Restaurer l'état précédent de `CMAKE_SUPPRESS_DEVELOPER_WARNINGS`
+set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS ${previous_developer_warnings})
 
 # LovyanGFX
 set(LOVYANGFX_DIR "lib/LovyanGFX/")
