@@ -17,6 +17,12 @@ if(NOT SDL2_POPULATED)
   FetchContent_MakeAvailable(SDL2)
 endif()
 
+# Masquer les warnings pour SDL2
+if(TARGET SDL2)
+  target_compile_options(SDL2 PRIVATE -w)  # Désactiver les avertissements pour GCC
+endif()
+
+
 # LovyanGFX
 set(LOVYANGFX_DIR "lib/LovyanGFX/")
 add_definitions(-DLGFX_SDL)
