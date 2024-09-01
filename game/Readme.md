@@ -13,4 +13,4 @@ https://cmake.org/download/
 https://ninja-build.org/
 https://code.visualstudio.com/docs/cpp/config-mingw#_installing-the-mingww64-toolchain
 
-$ cmake -B build -G Ninj
+$ cmake -B build -G Ninja
