@@ -1,101 +1,24 @@
+#include "LevelConverter.hpp"
 #include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <nlohmann/json.hpp>
-#include "tinyxml2.h"
 
-using namespace tinyxml2;
-using json = nlohmann::json;
-
-// Structure pour stocker les données de chaque composant
-struct Component {
-    std::string id;
-    std::string component;
-    double x;
-    double y;
-    double width;
-    double height;
-};
-
-// Fonction pour extraire les données XML et les stocker dans un vecteur de composants
-std::vector<Component> extractComponents(XMLElement* root) {
-    std::vector<Component> components;
-
-    // Parcourir tous les éléments <object>
-    for (XMLElement* obj = root->FirstChildElement("object"); obj != nullptr; obj = obj->NextSiblingElement("object")) {
-        const char* id = obj->Attribute("id");
-        const char* componentType = obj->Attribute("Component");
-
-        XMLElement* geometry = obj->FirstChildElement("mxCell")->FirstChildElement("mxGeometry");
-        if (geometry) {
-            double x = geometry->DoubleAttribute("x");
-            double y = geometry->DoubleAttribute("y");
-            double width = geometry->DoubleAttribute("width");
-            double height = geometry->DoubleAttribute("height");
-
-            Component comp = {id ? id : "", componentType ? componentType : "", x, y, width, height};
-            components.push_back(comp);
-        }
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <input XML file> <output JSON file>" << std::endl;
+        return 1;
     }
 
-    return components;
-}
+    std::string inputXmlFile = argv[1];
+    std::string outputJsonFile = argv[2];
 
-int main() {
-    XMLDocument doc;
-    if (doc.LoadFile("../../editor/level.drawio") != XML_SUCCESS) {
-        std::cerr << "Failed to load Drawio file" << std::endl;
-        return -1;
+    try {
+        LevelConverter converter(inputXmlFile);
+        converter.convertToJson(outputJsonFile);
+
+        std::cout << "JSON data written to " << outputJsonFile << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
-
-    // Accéder à l'élément racine <mxfile>
-    XMLElement* mxfile = doc.RootElement();
-    if (!mxfile) {
-        std::cerr << "No <mxfile> element found in the XML" << std::endl;
-        return -1;
-    }
-
-    // Accéder à l'élément <diagram>
-    XMLElement* diagram = mxfile->FirstChildElement("diagram");
-    if (!diagram) {
-        std::cerr << "No <diagram> element found in the XML" << std::endl;
-        return -1;
-    }
-
-    // Accéder à l'élément <mxGraphModel>
-    XMLElement* graphModel = diagram->FirstChildElement("mxGraphModel");
-    if (!graphModel) {
-        std::cerr << "No <mxGraphModel> element found in the XML" << std::endl;
-        return -1;
-    }
-
-    // Accéder à l'élément <root>
-    XMLElement* root = graphModel->FirstChildElement("root");
-    if (!root) {
-        std::cerr << "No <root> element found in the XML" << std::endl;
-        return -1;
-    }
-
-    // Extraire les composants
-    std::vector<Component> components = extractComponents(root);
-
-    // Convertir les composants en JSON
-    json level_data;
-    level_data["level"] = "Level-1";
-    for (const auto& comp : components) {
-        json component_json;
-        component_json["id"] = comp.id;
-        component_json["component"] = comp.component;
-        component_json["x"] = comp.x;
-        component_json["y"] = comp.y;
-        component_json["width"] = comp.width;
-        component_json["height"] = comp.height;
-        level_data["components"].push_back(component_json);
-    }
-
-    // Convertir le JSON en une chaîne et l'imprimer
-    std::cout << level_data.dump(4) << std::endl;
 
     return 0;
 }
