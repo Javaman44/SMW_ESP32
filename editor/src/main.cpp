@@ -49,9 +49,31 @@ int main() {
         return -1;
     }
 
-    XMLElement* root = doc.RootElement();
+    // Accéder à l'élément racine <mxfile>
+    XMLElement* mxfile = doc.RootElement();
+    if (!mxfile) {
+        std::cerr << "No <mxfile> element found in the XML" << std::endl;
+        return -1;
+    }
+
+    // Accéder à l'élément <diagram>
+    XMLElement* diagram = mxfile->FirstChildElement("diagram");
+    if (!diagram) {
+        std::cerr << "No <diagram> element found in the XML" << std::endl;
+        return -1;
+    }
+
+    // Accéder à l'élément <mxGraphModel>
+    XMLElement* graphModel = diagram->FirstChildElement("mxGraphModel");
+    if (!graphModel) {
+        std::cerr << "No <mxGraphModel> element found in the XML" << std::endl;
+        return -1;
+    }
+
+    // Accéder à l'élément <root>
+    XMLElement* root = graphModel->FirstChildElement("root");
     if (!root) {
-        std::cerr << "No root element found" << std::endl;
+        std::cerr << "No <root> element found in the XML" << std::endl;
         return -1;
     }
 
