@@ -13,6 +13,7 @@ https://cmake.org/download/
 https://ninja-build.org/
 https://code.visualstudio.com/docs/cpp/config-mingw#_installing-the-mingww64-toolchain
 
-- réussir à ccompilier et executer la demo sdl
 - créer drawio_converter
 - créer tache de pretraitement dans le build general pour génrer le fichier json
+- trouver un moeyn de faire une compilation multiplateforme (ifdef ou autre)
+- gerer le mode dev et release

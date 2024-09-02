@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/game/*",
-                "${workspaceFolder}/game/lib/LovyanGFX/src/**"
+                "${workspaceFolder}/game/lib/LovyanGFX/src/**",
+                "${workspaceFolder}/build/_deps/tinyxml2-src",
+                "${workspaceFolder}/build/_deps/json-src/include/nlohmann"
             ],
             "defines": [
                 "_DEBUG",
