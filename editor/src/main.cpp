@@ -44,7 +44,7 @@ std::vector<Component> extractComponents(XMLElement* root) {
 
 int main() {
     XMLDocument doc;
-    if (doc.LoadFile("level.drawio") != XML_SUCCESS) {
+    if (doc.LoadFile("../../editor/level.drawio") != XML_SUCCESS) {
         std::cerr << "Failed to load Drawio file" << std::endl;
         return -1;
     }
