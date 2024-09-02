@@ -2,8 +2,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <nlohmann/json.hpp>
 #include "tinyxml2.h"
-#include "json.hpp"
 
 using namespace tinyxml2;
 using json = nlohmann::json;

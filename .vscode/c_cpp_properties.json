@@ -5,8 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/game/*",
                 "${workspaceFolder}/game/lib/LovyanGFX/src/**",
-                "${workspaceFolder}/build/_deps/sdl2-src/include/**",
-                "${workspaceFolder}/build/_deps/json-src/include/**"
+                "${workspaceFolder}/build/_deps/**"
             ],
             "defines": [
                 "_DEBUG",

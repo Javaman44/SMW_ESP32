@@ -14,7 +14,6 @@ FetchContent_Declare(
 # Charger tinyxml2
 FetchContent_MakeAvailable(tinyxml2)
 
-
 # Utiliser FetchContent pour inclure nlohmann/json
 include(FetchContent)
 FetchContent_Declare(
@@ -24,12 +23,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(json)
 
-
 # Ajouter l'exécutable
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-# Lier la bibliothèque json à votre cible
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
-
-# Lier tinyxml2 à votre projet
-target_link_libraries(${PROJECT_NAME} PRIVATE tinyxml2::tinyxml2)
+# Lier les bibliothèques json et tinyxml2 à votre cible
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2::tinyxml2)
