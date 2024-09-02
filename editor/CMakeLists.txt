@@ -29,7 +29,7 @@ FetchContent_MakeAvailable(json)
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Lier la bibliothèque json à votre cible
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 # Lier tinyxml2 à votre projet
-target_link_libraries(${PROJECT_NAME} PRIVATE tinyxml2)
+target_link_libraries(${PROJECT_NAME} PRIVATE tinyxml2::tinyxml2)
