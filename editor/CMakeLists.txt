@@ -25,8 +25,21 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(json)
 
-# Ajouter l'exécutable
-add_executable(${PROJECT_NAME} src/main.cpp)
+# Utiliser FetchContent pour inclure cpp-base64
+FetchContent_Declare(
+  base64
+  GIT_REPOSITORY https://github.com/ReneNyffenegger/cpp-base64.git
+  GIT_TAG master  # Choisissez une version spécifique si nécessaire
+)
+
+# Charger cpp-base64
+FetchContent_MakeAvailable(base64)
+
+# Rechercher tous les fichiers .cpp dans le répertoire src
+file(GLOB SOURCES "src/*.cpp")
+
+# Ajouter l'exécutable avec les fichiers sources trouvés
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Lier les bibliothèques json et tinyxml2 à votre cible
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2 base64)
