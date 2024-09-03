@@ -1,8 +1,12 @@
 #include "JsonComponentWriter.hpp"
+#include <nlohmann/json.hpp>
 #include <fstream>
 #include <stdexcept>
 
-nlohmann::json JsonComponentWriter::toJson(const std::vector<Component>& components) {
+// Using directive for convenience
+using nlohmann::json;
+
+json JsonComponentWriter::toJson(const std::vector<Component>& components) {
     nlohmann::json level_data;
     level_data["level"] = "Level-1";  // This could be parameterized if needed
     for (const auto& comp : components) {

@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.30)
 project(SMW_Editor)
 
+# Ajouter le répertoire include/
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 # Inclure FetchContent
 include(FetchContent)
 
@@ -15,7 +18,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tinyxml2)
 
 # Utiliser FetchContent pour inclure nlohmann/json
-include(FetchContent)
 FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -27,4 +29,4 @@ FetchContent_MakeAvailable(json)
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Lier les bibliothèques json et tinyxml2 à votre cible
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2::tinyxml2)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2)
