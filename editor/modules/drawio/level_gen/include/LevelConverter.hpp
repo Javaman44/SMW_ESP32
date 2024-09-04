@@ -2,8 +2,8 @@
 #define LEVEL_CONVERTER_HPP
 
 #include <string>
-#include "XmlComponentExtractor.hpp"
-#include "JsonComponentWriter.hpp"
+#include "XmlExtractor.hpp"
+#include "JsonWriter.hpp"
 
 class LevelConverter {
 public:

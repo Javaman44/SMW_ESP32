@@ -1,10 +1,10 @@
 #include "LevelConverter.hpp"
-#include "JsonComponentWriter.hpp"
+#include "JsonWriter.hpp"
 
 LevelConverter::LevelConverter(const std::string& xmlPath) : xmlPath(xmlPath) {}
 
 void LevelConverter::convertToJson(const std::string& outputJsonFile) const {
-    XmlComponentExtractor extractor(xmlPath);
+    XmlExtractor extractor(xmlPath);
     std::vector<Component> components = extractor.extractComponents();
-    JsonComponentWriter::toFile(components, outputJsonFile);
+    JsonWriter::toFile(components, outputJsonFile);
 }

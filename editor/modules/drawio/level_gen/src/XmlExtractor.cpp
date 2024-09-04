@@ -1,4 +1,4 @@
-#include "XmlComponentExtractor.hpp"
+#include "XmlExtractor.hpp"
 #include <stdexcept>
 
 using namespace tinyxml2;

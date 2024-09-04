@@ -35,11 +35,37 @@ FetchContent_Declare(
 # Charger cpp-base64
 FetchContent_MakeAvailable(base64)
 
-# Rechercher tous les fichiers .cpp dans le répertoire src
-file(GLOB SOURCES "src/*.cpp")
+# Télécharger et configurer stb_image
+FetchContent_Declare(
+  stb
+  GIT_REPOSITORY https://github.com/nothings/stb.git
+  GIT_TAG master  # Vous pouvez spécifier une version fixe si nécessaire
+)
+FetchContent_MakeAvailable(stb)
 
-# Ajouter l'exécutable avec les fichiers sources trouvés
-add_executable(${PROJECT_NAME} ${SOURCES})
+# Télécharger et configurer lodepng pour le traitement PNG
+FetchContent_Declare(
+  lodepng
+  GIT_REPOSITORY https://github.com/lvandeve/lodepng.git
+  GIT_TAG master
+)
+FetchContent_MakeAvailable(lodepng)
+
+# Rechercher tous les fichiers .cpp dans les sous-modules
+file(GLOB_RECURSE MODULE_SOURCES "modules/**/src/*.cpp")
+
+# Ajouter l'exécutable avec le fichier main.cpp et les fichiers sources des modules
+add_executable(${PROJECT_NAME} app/main.cpp ${MODULE_SOURCES})
+
+# Rechercher tous les répertoires include dans les modules
+file(GLOB_RECURSE INCLUDE_DIRS "modules/**/include")
+
+# Inclure les répertoires d'en-tête pour les modules et les dépendances tierces
+target_include_directories(${PROJECT_NAME} PRIVATE 
+  ${INCLUDE_DIRS}
+  ${stb_SOURCE_DIR} 
+  ${lodepng_SOURCE_DIR}
+)
 
 # Lier les bibliothèques json et tinyxml2 à votre cible
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2 base64)

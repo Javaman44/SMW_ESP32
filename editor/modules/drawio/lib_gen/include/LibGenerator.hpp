@@ -1,21 +1,32 @@
-#ifndef DRAWIO_LIB_GENERATOR_HPP
-#define DRAWIO_LIB_GENERATOR_HPP
+#ifndef DRAWIO_LIBGENERATOR_HPP
+#define DRAWIO_LIBGENERATOR_HPP
 
 #include <string>
-// #include "Image.h"
-// #include "DrawioExporter.h"
-// #include "utils.hpp"  // Inclure les utilitaires pour lire le JSON
+#include <vector>
 
-class DrawioLibGenerator {
+class LibGenerator {
 public:
-    DrawioLibGenerator(const std::string& imagePath, const std::string& jsonMappingFile, int tileWidth, int tileHeight);
-    void generate(const std::string& outputDrawioFile);
+    // Constructeur prenant le fichier de configuration JSON en paramètre
+    explicit LibGenerator(const std::string& jsonMappingFile);
+
+    // Méthode pour générer le fichier de bibliothèque Draw.io
+    void build(const std::string& outputDrawioFile);
 
 private:
-    Image image;
+    // Chemin de l'image tileset
+    std::string imagePath;
+
+    // Chemin du fichier de configuration JSON
     std::string jsonMappingFile;
-    int tileWidth;
-    int tileHeight;
+
+    // Méthode pour extraire les données d'une tuile de l'image
+    unsigned char* extractTileData(unsigned char* data, int imgWidth, int imgHeight, int channels, int x, int y, int tileWidth, int tileHeight);
+
+    // Méthode pour encoder une image en base64
+    std::string encodeImageToBase64(unsigned char* data, int width, int height, int channels);
+
+    // Méthode pour encoder des données en PNG (utilise une bibliothèque PNG comme lodepng)
+    void encodePNG(unsigned char* data, int width, int height, int channels, std::vector<unsigned char>& outPng);
 };
 
-#endif // DRAWIO_LIB_GENERATOR_HPP
+#endif // DRAWIO_LIBGENERATOR_HPP

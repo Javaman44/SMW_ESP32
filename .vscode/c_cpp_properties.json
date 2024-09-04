@@ -4,8 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/game/**",
-                "${workspaceFolder}/editor/**",
-                "${workspaceFolder}/game/lib/LovyanGFX/src/**",
+                "${workspaceFolder}/editor/**",               
                 "${workspaceFolder}/build/_deps/**"
             ],
             "defines": [
