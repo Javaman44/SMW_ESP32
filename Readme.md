@@ -7,7 +7,7 @@ Pour les performances:
 
 
 # setup
-installation msys2 + cmake + ninja + vscode + recommended plugin (sonarlint, drawio integration, C/C++ Extension Pack)
+installation msys2 + cmake + ninja + vscode + recommended plugin ( drawio integration, C/C++ Extension Pack, clangd)
 https://www.msys2.org/
 https://cmake.org/download/
 https://ninja-build.org/

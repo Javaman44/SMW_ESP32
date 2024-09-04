@@ -2,6 +2,5 @@
     "cmake.generator": "Ninja",
     "files.associations": {
         "string": "cpp"
-    },
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json"
+    }
 }
