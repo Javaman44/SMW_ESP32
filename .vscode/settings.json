@@ -1,6 +1,3 @@
 {
-    "cmake.generator": "Ninja",
-    "files.associations": {
-        "string": "cpp"
-    }
+    "cmake.generator": "Ninja"
 }
