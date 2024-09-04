@@ -15,9 +15,9 @@ struct Component {
     double height;
 };
 
-class XmlComponentExtractor {
+class XmlExtractor {
 public:
-    explicit XmlComponentExtractor(const std::string& xmlPath);
+    explicit XmlExtractor(const std::string& xmlPath);
     std::vector<Component> extractComponents() const;
 
 private:

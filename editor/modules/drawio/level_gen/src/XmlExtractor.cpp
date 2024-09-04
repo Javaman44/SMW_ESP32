@@ -3,13 +3,13 @@
 
 using namespace tinyxml2;
 
-XmlComponentExtractor::XmlComponentExtractor(const std::string& xmlPath) {
+XmlExtractor::XmlExtractor(const std::string& xmlPath) {
     if (doc.LoadFile(xmlPath.c_str()) != XML_SUCCESS) {
         throw std::runtime_error("Failed to load XML file");
     }
 }
 
-std::vector<Component> XmlComponentExtractor::extractComponents() const {
+std::vector<Component> XmlExtractor::extractComponents() const {
     std::vector<Component> components;
     const XMLElement* mxfile = doc.RootElement();
     if (!mxfile) {

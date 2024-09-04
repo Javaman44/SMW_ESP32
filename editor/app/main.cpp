@@ -1,12 +1,12 @@
-#include "DrawioLibGenerator.hpp"
+#include "LibGenerator.hpp"
 #include "LevelConverter.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
     if (argc < 4) {
-        std::cerr << "Usage: " << argv[0] << " <mode> <input file> <output file> [<json mapping file>]" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <mode> A REVOIR " << std::endl;
         std::cerr << "Modes:" << std::endl;
-        std::cerr << "  create-drawio-lib <input PNG file> <output drawio file> <json mapping file>" << std::endl;
+        std::cerr << "  create-drawio-lib <json mapping file> <output drawio file>" << std::endl;
         std::cerr << "  convert-level <input XML file> <output JSON file>" << std::endl;
         return 1;
     }
@@ -24,9 +24,9 @@ int main(int argc, char* argv[]) {
 
             std::string jsonMappingFile = argv[4];
 
-            // Utilisation de la classe DrawioLibGenerator
-            DrawioLibGenerator generator(inputFile, jsonMappingFile);
-            generator.generate(outputFile);
+            // Utilisation de la classe LibGenerator
+            LibGenerator generator(jsonMappingFile);
+            generator.build(outputFile);
             std::cout << "Draw.io library created at " << outputFile << std::endl;
 
         } else if (mode == "convert-level") {

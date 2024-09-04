@@ -7,7 +7,13 @@ Pour les performances:
 
 
 # setup
-installation msys2 (clang) + cmake + ninja + vscode + recommended plugin ( drawio integration, C/C++ Extension Pack, clangd ?)
+installation:
+- msys2: see https://ph.life/research/misc/llvm/windows/msys2/
+- cmake
+- ninja
+- vscode 
+- recommended plugin ( drawio integration, C/C++ Extension Pack, clangd ?)
+
 https://solarianprogrammer.com/2021/06/11/install-clang-windows-msys2-mingw-w64/
 https://cmake.org/download/
 https://ninja-build.org/

@@ -62,9 +62,11 @@ file(GLOB_RECURSE INCLUDE_DIRS "modules/**/include")
 
 # Inclure les répertoires d'en-tête pour les modules et les dépendances tierces
 target_include_directories(${PROJECT_NAME} PRIVATE 
-  ${INCLUDE_DIRS}
+  # ${INCLUDE_DIRS}
   ${stb_SOURCE_DIR} 
   ${lodepng_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/level_gen/include  # Ajoute le répertoire include de level_gen
+  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/lib_gen/include    # Ajoute le répertoire include de lib_gen
 )
 
 # Lier les bibliothèques json et tinyxml2 à votre cible

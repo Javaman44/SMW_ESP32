@@ -1,5 +1,6 @@
 #include "LevelConverter.hpp"
 #include "JsonWriter.hpp"
+#include "XmlExtractor.hpp"
 
 LevelConverter::LevelConverter(const std::string& xmlPath) : xmlPath(xmlPath) {}
 
