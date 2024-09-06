@@ -3,6 +3,10 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
+
+    // test
+    char src[10] = "Hello";
+
     if (argc < 4) {
         std::cerr << "Usage: " << argv[0] << " <mode> A REVOIR " << std::endl;
         std::cerr << "Modes:" << std::endl;
@@ -11,6 +15,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    /* this comment is non-compliant */
     std::string mode = argv[1];
     std::string inputFile = argv[2];
     std::string outputFile = argv[3];

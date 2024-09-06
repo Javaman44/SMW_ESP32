@@ -1,11 +1,7 @@
-cmake_minimum_required(VERSION 3.30)
 project(SMW_Editor)
 
 # Ajouter le répertoire include/
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# Inclure FetchContent
-include(FetchContent)
 
 # Télécharger tinyxml2
 FetchContent_Declare(
@@ -51,22 +47,26 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(lodepng)
 
-# Rechercher tous les fichiers .cpp dans les sous-modules
-file(GLOB_RECURSE MODULE_SOURCES "modules/**/src/*.cpp")
+# Add source files 
+set(SRC_FILES
+    app/main.cpp
+    modules/drawio/level_gen/src/JsonWritter.cpp
+    modules/drawio/level_gen/src/LevelConverter.cpp
+    modules/drawio/level_gen/src/XmlExtractor.cpp
+    modules/drawio/lib_gen/src/Image.cpp
+    modules/drawio/lib_gen/src/LibGenerator.cpp
+    modules/drawio/lib_gen/src/TileExtractor.cpp
+)
 
 # Ajouter l'exécutable avec le fichier main.cpp et les fichiers sources des modules
 add_executable(${PROJECT_NAME} app/main.cpp ${MODULE_SOURCES})
 
-# Rechercher tous les répertoires include dans les modules
-file(GLOB_RECURSE INCLUDE_DIRS "modules/**/include")
-
 # Inclure les répertoires d'en-tête pour les modules et les dépendances tierces
 target_include_directories(${PROJECT_NAME} PRIVATE 
-  # ${INCLUDE_DIRS}
   ${stb_SOURCE_DIR} 
   ${lodepng_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/level_gen/include  # Ajoute le répertoire include de level_gen
-  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/lib_gen/include    # Ajoute le répertoire include de lib_gen
+  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/level_gen/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/lib_gen/include
 )
 
 # Lier les bibliothèques json et tinyxml2 à votre cible

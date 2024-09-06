@@ -1,8 +1,5 @@
 project(SMW_Game)
 
-# Inclure FetchContent pour gérer les dépendances
-include(FetchContent)
-
 # SDL2
 FetchContent_Declare(
     SDL2
@@ -32,9 +29,10 @@ file(GLOB LOVYANGFX_SOURCES
   ${LOVYANGFX_DIR}/src/lgfx/v1/platforms/sdl/*.cpp
 )
 
-# Récupérer automatiquement tous les fichiers .cpp dans le répertoire src
-file(GLOB_RECURSE PROJECT_SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+# Add source files 
+set(PROJECT_SOURCES
+    src/sdl_main.cpp
+    src/user_code.cpp
 )
 
 # Définir l'exécutable
@@ -46,7 +44,7 @@ add_executable(${PROJECT_NAME}
 # Spécifier les répertoires des includes (hpp) pour LovyanGFX
 target_include_directories(${PROJECT_NAME} PUBLIC 
   ${LOVYANGFX_DIR}/src
-  ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # Lier SDL2 et LovyanGFX à l'exécutable

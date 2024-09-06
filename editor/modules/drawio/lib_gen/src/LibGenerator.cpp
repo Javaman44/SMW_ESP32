@@ -12,7 +12,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-
 // Constructeur prenant uniquement le fichier JSON en paramètre
 LibGenerator::LibGenerator(const std::string& jsonMappingFile): jsonMappingFile(jsonMappingFile) {
     

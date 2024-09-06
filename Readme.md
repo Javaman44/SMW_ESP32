@@ -8,18 +8,18 @@ Pour les performances:
 
 # setup
 installation:
-- msys2: see https://ph.life/research/misc/llvm/windows/msys2/
+- msys2 ($ pacman -S mingw-w64-ucrt-x86_64-gcc)
 - cmake
 - ninja
 - vscode 
-- recommended plugin ( drawio integration, C/C++ Extension Pack, clangd ?)
+- recommended plugin: drawio integration, C/C++ Extension Pack, sonarlint (+ nodejs)
 
 https://solarianprogrammer.com/2021/06/11/install-clang-windows-msys2-mingw-w64/
 https://cmake.org/download/
 https://ninja-build.org/
 https://code.visualstudio.com/docs/cpp/config-mingw#_installing-the-mingww64-toolchain
 
-- verifier utilité de tasks.json et settings.json et cpp properties
+- corriger sonarlint en faisant un test avec un cmake simplifié (juste emain.cpp)
 - créer tache de pretraitement dans le build general pour génrer le fichier json
 - trouver un moeyn de faire une compilation multiplateforme (ifdef ou autre)
 - gerer le mode dev et release
