@@ -1,9 +1,5 @@
 project(SMW_Editor)
 
-# ????
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # Télécharger tinyxml2
 FetchContent_Declare(
   tinyxml2
