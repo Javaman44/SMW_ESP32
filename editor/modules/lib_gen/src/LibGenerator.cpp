@@ -47,7 +47,9 @@ void LibGenerator::build(const std::string& outputDrawioFile) {
     TileConfig config = readTileConfig(jsonMappingFile);
 
     // Charger l'image avec stb_image
-    int width, height, channels;
+    int width;
+    int height;
+    int channels;
     unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &channels, 0);
     if (!data) {
         throw ImageLoadException(imagePath);

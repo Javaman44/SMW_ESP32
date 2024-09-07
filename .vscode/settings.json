@@ -4,5 +4,8 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "javaman44",
         "projectKey": "Javaman44_SMW_ESP32"
+    },
+    "files.associations": {
+        "new": "cpp"
     }
 }

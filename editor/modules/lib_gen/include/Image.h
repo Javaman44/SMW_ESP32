@@ -7,7 +7,7 @@
 
 class Image {
 public:
-    Image(const std::string& filepath);
+    explicit Image(const std::string& filepath);
     ~Image();
 
     int getWidth() const;
@@ -16,7 +16,9 @@ public:
     const unsigned char* getData() const;
 
 private:
-    int width, height, channels;
+    int width;
+    int height;
+    int channels;
     unsigned char* data;
 };
 
