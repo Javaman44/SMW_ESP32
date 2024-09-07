@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 class LibGenerator {
 public:
@@ -27,6 +28,37 @@ private:
 
     // Méthode pour encoder des données en PNG (utilise une bibliothèque PNG comme lodepng)
     void encodePNG(unsigned char* data, int width, int height, int channels, std::vector<unsigned char>& outPng);
+};
+
+// Déclaration des exceptions personnalisées
+struct JsonFileOpenException : public std::runtime_error {
+    explicit JsonFileOpenException(const std::string& filepath)
+        : std::runtime_error("Failed to open JSON file: " + filepath) {}
+};
+
+struct JsonParsingException : public std::runtime_error {
+    explicit JsonParsingException(const std::string& message)
+        : std::runtime_error("Failed to parse JSON: " + message) {}
+};
+
+struct ImageLoadException : public std::runtime_error {
+    explicit ImageLoadException(const std::string& filepath)
+        : std::runtime_error("Failed to load image: " + filepath) {}
+};
+
+struct TileExtractionException : public std::runtime_error {
+    explicit TileExtractionException()
+        : std::runtime_error("Failed to extract tile data from image.") {}
+};
+
+struct PngEncodingException : public std::runtime_error {
+    explicit PngEncodingException(const std::string& errorMessage)
+        : std::runtime_error("Failed to encode PNG: " + errorMessage) {}
+};
+
+struct XmlSaveException : public std::runtime_error {
+    explicit XmlSaveException(const std::string& filepath)
+        : std::runtime_error("Failed to save XML file: " + filepath) {}
 };
 
 #endif // DRAWIO_LIBGENERATOR_HPP

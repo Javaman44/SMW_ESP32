@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 class Image {
 public:
@@ -17,6 +18,11 @@ public:
 private:
     int width, height, channels;
     unsigned char* data;
+};
+
+struct loading_image_failed : public std::runtime_error {
+    explicit loading_image_failed(const std::string& message) 
+        : std::runtime_error("Failed to load image: " + message) {}
 };
 
 #endif // IMAGE_H

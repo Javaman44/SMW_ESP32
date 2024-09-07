@@ -18,23 +18,27 @@
 #include <stb_image_write.h>
 
 // Constructeur prenant uniquement le fichier JSON en paramètre
-LibGenerator::LibGenerator(const std::string& jsonMappingFile): jsonMappingFile(jsonMappingFile) {
-    
+LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile(jsonMappingFile) {
+
     // Lire le fichier JSON pour obtenir le chemin du tileset
     std::ifstream jsonFile(jsonMappingFile);
     if (!jsonFile.is_open()) {
-        throw std::runtime_error("Failed to open JSON mapping file: " + jsonMappingFile);
+        throw JsonFileOpenException(jsonMappingFile);
     }
 
     nlohmann::json configJson;
-    jsonFile >> configJson;
+    try {
+        jsonFile >> configJson;
+    } catch (const std::exception& e) {
+        throw JsonParsingException(e.what());
+    }
     jsonFile.close();
 
     // Extraire le chemin du tileset du JSON
     if (configJson.contains("tilesetPath")) {
         imagePath = configJson["tilesetPath"];
     } else {
-        throw std::runtime_error("JSON mapping file is missing 'tilesetPath'.");
+        throw JsonParsingException("Missing 'tilesetPath' in JSON.");
     }
 }
 
@@ -43,12 +47,10 @@ void LibGenerator::build(const std::string& outputDrawioFile) {
     TileConfig config = readTileConfig(jsonMappingFile);
 
     // Charger l'image avec stb_image
-    int width;
-    int height;
-    int channels;
+    int width, height, channels;
     unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &channels, 0);
     if (!data) {
-        throw std::runtime_error("Failed to load image: " + imagePath);
+        throw ImageLoadException(imagePath);
     }
 
     // Commencer à créer le fichier XML pour la bibliothèque Draw.io
@@ -61,12 +63,12 @@ void LibGenerator::build(const std::string& outputDrawioFile) {
         std::string id = tile.first;
         int x = tile.second.first;
         int y = tile.second.second;
-        
+
         // Extraire la sous-image correspondant à la tuile
         unsigned char* tileData = extractTileData(data, width, height, channels, x, y, config.tileWidth, config.tileHeight);
         if (!tileData) {
             stbi_image_free(data);
-            throw std::runtime_error("Failed to extract tile data from image.");
+            throw TileExtractionException();
         }
 
         // Convertir la tuile en base64
@@ -92,7 +94,7 @@ void LibGenerator::build(const std::string& outputDrawioFile) {
     // Sauvegarder le fichier XML final
     tinyxml2::XMLError eResult = doc.SaveFile(outputDrawioFile.c_str());
     if (eResult != tinyxml2::XML_SUCCESS) {
-        throw std::runtime_error("Failed to save Draw.io library file: " + outputDrawioFile);
+        throw XmlSaveException(outputDrawioFile);
     }
 }
 
@@ -123,12 +125,11 @@ std::string LibGenerator::encodeImageToBase64(unsigned char* data, int width, in
 
 void LibGenerator::encodePNG(unsigned char* data, int width, int height, int channels, std::vector<unsigned char>& outPng) {
     // Utilisez une bibliothèque comme lodepng pour encoder l'image en PNG
-    // Exemple d'utilisation de lodepng :
     lodepng::State state;
     state.info_raw.colortype = (channels == 4) ? LCT_RGBA : LCT_RGB;
     state.info_raw.bitdepth = 8;
     unsigned error = lodepng::encode(outPng, data, width, height, state);
     if (error) {
-        throw std::runtime_error("Failed to encode PNG: " + std::string(lodepng_error_text(error)));
+        throw PngEncodingException(lodepng_error_text(error));
     }
 }
