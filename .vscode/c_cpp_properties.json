@@ -3,8 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/game/**",
-                "${workspaceFolder}/editor/**",
+                "${workspaceFolder}/game/include",
+                "${workspaceFolder}/editor/modules/level_gen/include",
+                "${workspaceFolder}/editor/modules/lib_gen/include",
                 "${workspaceFolder}/build/_deps/**"
             ],
             "defines": [

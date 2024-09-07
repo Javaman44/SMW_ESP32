@@ -31,8 +31,8 @@ file(GLOB LOVYANGFX_SOURCES
 
 # Add source files 
 set(PROJECT_SOURCES
-    src/sdl_main.cpp
-    src/user_code.cpp
+  src/sdl_main.cpp
+  src/user_code.cpp
 )
 
 # Définir l'exécutable

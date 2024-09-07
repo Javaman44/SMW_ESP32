@@ -1,16 +1,21 @@
 #include "LibGenerator.hpp"
 #include "utils.hpp"
 
-#include <tinyxml2.h>
-#include <base64.h>
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
+
+#include <tinyxml2.h>
+#include <base64.h>
 #include <nlohmann/json.hpp>
 #include <lodepng.h>
+
 // Définir l'implémentation de stb_image
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
 // Constructeur prenant uniquement le fichier JSON en paramètre
 LibGenerator::LibGenerator(const std::string& jsonMappingFile): jsonMappingFile(jsonMappingFile) {

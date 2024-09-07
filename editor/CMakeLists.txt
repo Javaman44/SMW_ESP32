@@ -1,7 +1,8 @@
 project(SMW_Editor)
 
-# Ajouter le répertoire include/
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+# ????
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Télécharger tinyxml2
 FetchContent_Declare(
@@ -50,24 +51,27 @@ FetchContent_MakeAvailable(lodepng)
 # Add source files 
 set(SRC_FILES
     app/main.cpp
-    modules/drawio/level_gen/src/JsonWritter.cpp
-    modules/drawio/level_gen/src/LevelConverter.cpp
-    modules/drawio/level_gen/src/XmlExtractor.cpp
-    modules/drawio/lib_gen/src/Image.cpp
-    modules/drawio/lib_gen/src/LibGenerator.cpp
-    modules/drawio/lib_gen/src/TileExtractor.cpp
+    modules/level_gen/src/JsonWriter.cpp
+    modules/level_gen/src/LevelConverter.cpp
+    modules/level_gen/src/XmlExtractor.cpp
+    modules/lib_gen/src/Image.cpp
+    modules/lib_gen/src/LibGenerator.cpp
+    modules/lib_gen/src/TileExtractor.cpp
+    ${lodepng_SOURCE_DIR}/lodepng.cpp  # Explicitly include lodepng.cpp
+    ${base64_SOURCE_DIR}/base64.cpp    # Explicitly include base64.cpp
 )
 
-# Ajouter l'exécutable avec le fichier main.cpp et les fichiers sources des modules
-add_executable(${PROJECT_NAME} app/main.cpp ${MODULE_SOURCES})
+# Ajouter l'exécutable avec les fichiers sources
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # Inclure les répertoires d'en-tête pour les modules et les dépendances tierces
 target_include_directories(${PROJECT_NAME} PRIVATE 
   ${stb_SOURCE_DIR} 
   ${lodepng_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/level_gen/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/modules/drawio/lib_gen/include
+  ${base64_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/modules/level_gen/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/modules/lib_gen/include
 )
 
 # Lier les bibliothèques json et tinyxml2 à votre cible
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2 base64)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json tinyxml2)
