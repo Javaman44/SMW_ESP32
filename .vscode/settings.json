@@ -1,4 +1,8 @@
 {
     "cmake.generator": "Ninja",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json"
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json",
+    "sonarlint.connectedMode.project": {
+        "connectionId": "javaman44",
+        "projectKey": "Javaman44_SMW_ESP32"
+    }
 }
