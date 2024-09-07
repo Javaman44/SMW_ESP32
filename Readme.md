@@ -1,8 +1,10 @@
 # SMW_ESP32
 
-Super Mario World game like with level editor. 
-Target:
-- linux/windows with SDL2 
-- esp32 
+A Super Mario World-like game featuring a level editor.
 
-In development phase
+**Target Platforms:**
+- Linux/Windows simulator using SDL2
+- ESP32 using LovyanGFX (add device reference)
+
+**Release Status:**
+- Not available yet. Currently in development.

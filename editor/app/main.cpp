@@ -8,6 +8,9 @@ int main(int argc, char* argv[]) {
     // test
     char src[10] = "Hello";
 
+
+    
+
     if (argc < 4) {
         std::cerr << "Usage: " << argv[0] << " <mode> A REVOIR " << std::endl;
         std::cerr << "Modes:" << std::endl;
