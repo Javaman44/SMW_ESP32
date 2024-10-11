@@ -45,6 +45,7 @@ LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile
 void LibGenerator::build(const std::string& outputDrawioFile) {
     // Lire la configuration des tuiles depuis le fichier JSON
     TileConfig config = readTileConfig(jsonMappingFile);
+    printTileConfig(config);
 
     // Charger l'image avec stb_image
     int width;

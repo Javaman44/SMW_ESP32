@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <iostream>
 
 // Structure pour stocker la configuration des tuiles
 struct TileConfig {
@@ -37,6 +38,16 @@ TileConfig readTileConfig(const std::string& jsonMappingFile) {
     }
 
     return config;
+}
+
+// Fonction pour afficher la configuration des tuiles dans la sortie standard
+void printTileConfig(const TileConfig& config) {
+    std::cout << "Tile Width: " << config.tileWidth << std::endl;
+    std::cout << "Tile Height: " << config.tileHeight << std::endl;
+    std::cout << "Tiles:" << std::endl;
+    for (const auto& tile : config.tiles) {
+        std::cout << "  ID: " << tile.first << " Position: (" << tile.second.first << ", " << tile.second.second << ")" << std::endl;
+    }
 }
 
 #endif // UTILS_HPP

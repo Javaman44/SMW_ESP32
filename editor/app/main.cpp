@@ -4,14 +4,9 @@
 
 
 int main(int argc, char* argv[]) {
-
-    // test
-    char src[10] = "Hello";
-
-
     
-
     if (argc < 4) {
+        std::cerr << argc << std::endl;
         std::cerr << "Usage: " << argv[0] << " <mode> A REVOIR " << std::endl;
         std::cerr << "Modes:" << std::endl;
         std::cerr << "  create-drawio-lib <json mapping file> <output drawio file>" << std::endl;
@@ -26,12 +21,13 @@ int main(int argc, char* argv[]) {
 
     try {
         if (mode == "create-drawio-lib") {
-            if (argc < 5) {
+            if (argc < 4) {                
                 std::cerr << "Missing JSON mapping file for create-drawio-lib mode" << std::endl;
                 return 1;
             }
 
-            std::string jsonMappingFile = argv[4];
+            std::string jsonMappingFile = argv[2];
+            std::cout << "jsonMappingFile at " << jsonMappingFile << std::endl;
 
             // Utilisation de la classe LibGenerator
             LibGenerator generator(jsonMappingFile);

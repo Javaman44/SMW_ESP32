@@ -8,3 +8,6 @@ A Super Mario World-like game featuring a level editor.
 
 **Release Status:**
 - Not available yet. Currently in development.
+
+
+.\SMW_Editor.exe create-drawio-lib ..\..\editor\lib_gen_config.json ..\..\editor\components.drawio

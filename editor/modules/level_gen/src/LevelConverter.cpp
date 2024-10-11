@@ -2,7 +2,7 @@
 #include "JsonWriter.hpp"
 #include "XmlExtractor.hpp"
 
-explicit LevelConverter::LevelConverter(const std::string& xmlPath) : xmlPath(xmlPath) {}
+LevelConverter::LevelConverter(const std::string& xmlPath) : xmlPath(xmlPath) {}
 
 void LevelConverter::convertToJson(const std::string& outputJsonFile) const {
     XmlExtractor extractor(xmlPath);

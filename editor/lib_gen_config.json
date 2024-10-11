@@ -1,0 +1,9 @@
+{
+    "tilesetPath": "../../editor/modules/tileset.png",
+    "tileWidth": 32,
+    "tileHeight": 32,
+    "tiles": [
+        {"filename": "mirror.png", "x": 0, "y": 0},
+        {"filename": "eye.png", "x": 0, "y": 1}
+    ]
+}

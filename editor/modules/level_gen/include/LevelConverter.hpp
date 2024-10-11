@@ -8,7 +8,7 @@
 class LevelConverter {
 public:
     // Constructeur
-    LevelConverter(const std::string& xmlPath);
+    explicit LevelConverter(const std::string& xmlPath);
 
     // Méthode pour directement extraire et écrire dans un fichier JSON
     void convertToJson(const std::string& outputJsonFile) const;
