@@ -3,6 +3,21 @@
     "tileWidth": 16,
     "tileHeight": 16,
     "tiles": [
-        { "title": "Ground 1", "id": "GROUND_1", "x": 2, "y": 6 }
+        { "title": "Mirror", "id": "MIRROR", "x": 0, "y": 0 },
+
+        { "title": "Ground 1", "id": "GROUND_1", "x": 0, "y": 6 },
+        { "title": "Ground 2", "id": "GROUND_2", "x": 1, "y": 6 },
+        { "title": "Ground 3", "id": "GROUND_3", "x": 2, "y": 6 },
+        { "title": "Ground 4", "id": "GROUND_4", "x": 3, "y": 6 },
+        { "title": "Ground 5", "id": "GROUND_5", "x": 4, "y": 6 },
+
+        { "title": "Ground 6", "id": "GROUND_6", "x": 0, "y": 7 },
+        { "title": "Ground 7", "id": "GROUND_7", "x": 1, "y": 7 },
+        { "title": "Ground 8", "id": "GROUND_8", "x": 2, "y": 7 },
+        { "title": "Ground 9", "id": "GROUND_9", "x": 3, "y": 7 },
+        { "title": "Ground 9", "id": "GROUND_9", "x": 4, "y": 7 },
+
+        { "title": "Ground 10", "id": "GROUND_10", "x": 1, "y": 8 },
+        { "title": "Ground 11", "id": "GROUND_11", "x": 3, "y": 8 }
     ]
 }

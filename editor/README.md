@@ -18,3 +18,8 @@ assets found at https://www.mariouniverse.com/sprites-snes-smw/
 ```console
 $ .\SMW_Editor.exe generate ..\..\editor\lib_gen_config.json ..\..\editor\components_test.drawio
 ```
+
+
+## todo 
+opencv install:
+- https://docs.opencv.org/4.x/d3/d52/tutorial_windows_install.html#tutorial_windows_install_prebuilt
