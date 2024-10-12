@@ -7,10 +7,12 @@
 
 // Structure pour stocker la configuration des tuiles
 struct Tile {
-    std::string title;
-    std::string id;
-    int x;
-    int y;
+    std::string title;  // Le titre de la tuile
+    std::string id;     // L'ID ou identifiant de la tuile
+    int x;              // La colonne où se trouve la tuile
+    int y;              // La ligne où se trouve la tuile
+    int width;          // La largeur de la tuile (par défaut 16 ou 40 après redimensionnement)
+    int height;         // La hauteur de la tuile (par défaut 16 ou 40 après redimensionnement)
 };
 
 struct TileConfig {

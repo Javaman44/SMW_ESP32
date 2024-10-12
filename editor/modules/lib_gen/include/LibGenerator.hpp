@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <TileConfig.hpp>
+#include <opencv2/opencv.hpp>  // Inclusion de la bibliothèque OpenCV
 
 class LibGenerator {
 public:
@@ -20,11 +22,23 @@ private:
     // Chemin du fichier de configuration JSON
     std::string jsonMappingFile;
 
-    // Méthode pour extraire les données d'une tuile de l'image
-    unsigned char* extractTileData(unsigned char* data, int imgWidth, int imgHeight, int channels, int x, int y, int tileWidth, int tileHeight);
+    // Méthode pour charger l'image à partir du chemin tileset
+    cv::Mat loadImage();
 
-    // Méthode pour encoder une image en base64
-    std::string encodeImageToBase64(unsigned char* data, int width, int height, int channels);
+    // Méthode pour traiter une tuile (extraction, redimensionnement, génération du XML)
+    std::string processTile(cv::Mat& image, const Tile& tile);
+
+    // Méthode pour extraire une tuile de l'image
+    cv::Mat extractTile(cv::Mat& image, const Tile& tile);
+
+    // Méthode pour redimensionner une tuile à 40x40 pixels
+    cv::Mat resizeTile(cv::Mat& tileImage);
+
+    // Méthode pour encoder une image redimensionnée en base64
+    std::string encodeTileToBase64(cv::Mat& resizedTileImage);
+
+    // Méthode pour générer le XML pour une tuile donnée
+    std::string generateXmlForTile(const Tile& tile, const std::string& base64Image);
 };
 
 // Déclaration des exceptions personnalisées

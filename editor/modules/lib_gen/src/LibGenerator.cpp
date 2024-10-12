@@ -7,13 +7,10 @@
 #include <tinyxml2.h>
 #include <base64.h>
 #include <nlohmann/json.hpp>
-
-// Define stb_image and stb_image_write implementations
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb_image_write.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <cstring>
 
 // Prototypes of utility functions
 std::string escapeXml(const std::string& data);
@@ -41,51 +38,25 @@ LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile
 
 void LibGenerator::build(const std::string& outputDrawioFile) {
     TileConfig config = readTileConfig(jsonMappingFile);
-
-    int width, height, channels;
-    unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &channels, 0);
-    if (!data) {
-        throw ImageLoadException(imagePath);
-    }
+    cv::Mat image = loadImage();  // Utilisation d'OpenCV pour charger l'image
 
     std::ofstream outputFile(outputDrawioFile);
     if (!outputFile.is_open()) {
         throw XmlSaveException(outputDrawioFile);
     }
 
-    // Add the <mxlibrary> tag at the beginning of the file
     outputFile << "<mxlibrary>[\n";
-
+    
     for (const auto& tile : config.tiles) {
-        std::string title = tile.title;
-        std::string id = tile.id;
-        int x = tile.x;
-        int y = tile.y;
-
-        // Extract tile data from the BMP image
-        unsigned char* tileData = extractTileData(data, width, height, channels, x, y, config.tileWidth, config.tileHeight);
-        if (!tileData) {
-            stbi_image_free(data);
-            throw TileExtractionException();
-        }
-
-        // Encode the image to base64 in BMP format, without adding ";base64"
-        std::string base64Image = encodeImageToBase64(tileData, config.tileWidth, config.tileHeight, channels);
-        delete[] tileData;
-
-        // Create the XML string with proper image encoding format (without ";base64")
-        std::string xmlData = R"(<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><object label="" Component=")" + id + R"(" id="2"><mxCell style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/bmp,)" + base64Image + R"(" vertex="1" parent="1"><mxGeometry width=")" + std::to_string(config.tileWidth) + R"(" height=")" + std::to_string(config.tileHeight) + R"(" as="geometry"/></mxCell></object></root></mxGraphModel>)";
-
-        // Escape the XML string
+        std::string xmlData = processTile(image, tile);
         std::string escapedXml = escapeXml(xmlData);
 
-        // Write the JSON content with escaped XML into the output file
         outputFile << "  {\n";
         outputFile << "    \"xml\": \"" << escapedXml << "\",\n";
-        outputFile << "    \"w\": " << config.tileWidth << ",\n";
-        outputFile << "    \"h\": " << config.tileHeight << ",\n";
+        outputFile << "    \"w\": 40,\n";
+        outputFile << "    \"h\": 40,\n";
         outputFile << "    \"aspect\": \"fixed\",\n";
-        outputFile << "    \"title\": \"" << title << "\"\n";
+        outputFile << "    \"title\": \"" << tile.title << "\"\n";
         outputFile << "  }";
 
         if (&tile != &config.tiles.back()) {
@@ -94,49 +65,57 @@ void LibGenerator::build(const std::string& outputDrawioFile) {
         outputFile << "\n";
     }
 
-    // Close the <mxlibrary> tag
     outputFile << "]</mxlibrary>";
     outputFile.close();
-
-    stbi_image_free(data);
 }
 
-unsigned char* LibGenerator::extractTileData(unsigned char* data, int imgWidth, int imgHeight, int channels, int x, int y, int tileWidth, int tileHeight) {
-    // Extract a specific tile's data from the image
-    int tileSize = tileWidth * tileHeight * channels;
-    unsigned char* tileData = new unsigned char[tileSize];
-
-    for (int row = 0; row < tileHeight; ++row) {
-        for (int col = 0; col < tileWidth; ++col) {
-            for (int c = 0; c < channels; ++c) {
-                int srcIndex = ((y + row) * imgWidth + (x + col)) * channels + c;
-                int destIndex = (row * tileWidth + col) * channels + c;
-                tileData[destIndex] = data[srcIndex];
-            }
-        }
+// Méthode pour charger l'image avec OpenCV
+cv::Mat LibGenerator::loadImage() {
+    cv::Mat image = cv::imread(imagePath, cv::IMREAD_UNCHANGED);
+    if (image.empty()) {
+        throw ImageLoadException(imagePath);
     }
-
-    return tileData;
+    return image;
 }
 
-std::string LibGenerator::encodeImageToBase64(unsigned char* data, int width, int height, int channels) {
-    // Use stb_image_write to encode BMP and directly convert to base64
-    std::ostringstream bmpStream;
+// Méthode pour traiter une tuile (extraction, redimensionnement, génération du XML)
+std::string LibGenerator::processTile(cv::Mat& image, const Tile& tile) {
+    cv::Mat tileImage = extractTile(image, tile);
+    cv::Mat resizedTileImage = resizeTile(tileImage);
 
-    // Encode BMP using stb_image_write
-    stbi_write_bmp_to_func([](void* context, void* data, int size) {
-        std::ostringstream* stream = static_cast<std::ostringstream*>(context);
-        stream->write(reinterpret_cast<const char*>(data), size);
-    }, &bmpStream, width, height, channels, data);
-
-    // Convert the BMP data from the stream to a vector
-    std::string bmpStr = bmpStream.str();
-    std::vector<unsigned char> bmpData(bmpStr.begin(), bmpStr.end());
-
-    // Encode the BMP data to base64
-    return base64_encode(bmpData.data(), bmpData.size());
+    std::string base64Image = encodeTileToBase64(resizedTileImage);
+    return generateXmlForTile(tile, base64Image);
 }
 
+// Méthode pour extraire une tuile de 16x16 pixels
+cv::Mat LibGenerator::extractTile(cv::Mat& image, const Tile& tile) {
+    int tileX = tile.x;
+    int tileY = tile.y;
+    cv::Rect roi(tileX * 17, tileY * 17, 16, 16);  // Définir la région de 16x16 pixels
+    return image(roi).clone();  // Extraire et cloner la tuile
+}
+
+// Méthode pour redimensionner une tuile à 40x40 pixels
+cv::Mat LibGenerator::resizeTile(cv::Mat& tileImage) {
+    cv::Mat resizedImage;
+    cv::resize(tileImage, resizedImage, cv::Size(40, 40));  // Redimensionner à 40x40 pixels
+    return resizedImage;
+}
+
+// Méthode pour encoder une tuile redimensionnée en base64 au format BMP
+std::string LibGenerator::encodeTileToBase64(cv::Mat& image) {
+    std::vector<uchar> buffer;
+    cv::imencode(".bmp", image, buffer);  // Encoder l'image au format BMP
+
+    return base64_encode(buffer.data(), buffer.size());  // Encoder en base64
+}
+
+// Méthode pour générer le XML pour une tuile donnée
+std::string LibGenerator::generateXmlForTile(const Tile& tile, const std::string& base64Image) {
+    return R"(<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><object label="" Component=")"
+           + tile.id + R"(" id="2"><mxCell style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/bmp,)"
+           + base64Image + R"(" vertex="1" parent="1"><mxGeometry width="40" height="40" as="geometry"/></mxCell></object></root></mxGraphModel>)";
+}
 
 std::string escapeXml(const std::string& data) {
     std::string escaped;
@@ -145,7 +124,7 @@ std::string escapeXml(const std::string& data) {
             case '&':  escaped.append("&amp;"); break;
             case '<':  escaped.append("&lt;"); break;
             case '>':  escaped.append("&gt;"); break;
-            case '"':  escaped.append("\\\""); break;  // Escape quotes with a backslash
+            case '"':  escaped.append(R"(\")"); break;  // Échapper les guillemets avec un antislash
             default:   escaped.push_back(c); break;
         }
     }

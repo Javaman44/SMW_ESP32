@@ -1,7 +1,7 @@
 {
     "tilesetPath": "../../editor/tileset.png",
-    "tileWidth": 32,
-    "tileHeight": 32,
+    "tileWidth": 16,
+    "tileHeight": 16,
     "tiles": [
         { "title": "Ground 1", "id": "GROUND_1", "x": 2, "y": 6 }
     ]
