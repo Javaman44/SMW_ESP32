@@ -1,8 +1,8 @@
 #ifndef TILE_EXTRACTOR_H
 #define TILE_EXTRACTOR_H
 
-#include "Image.h"
-#include "utils.hpp"  // Inclusion de utils.hpp pour accéder à TileConfig
+#include "Image.hpp"
+#include "TileConfig.hpp"  // Inclusion de utils.hpp pour accéder à TileConfig
 
 #include <string>
 #include <vector>
@@ -10,7 +10,7 @@
 
 
 // Déclaration de la fonction printTileConfig
-void printTileConfig(const TileConfig& config);
+// void printTileConfig(const TileConfig& config);
 
 class TileExtractor {
 public:

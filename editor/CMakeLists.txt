@@ -37,12 +37,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(stb)
 
 # Télécharger et configurer lodepng pour le traitement PNG
-FetchContent_Declare(
-  lodepng
-  GIT_REPOSITORY https://github.com/lvandeve/lodepng.git
-  GIT_TAG master
-)
-FetchContent_MakeAvailable(lodepng)
+#FetchContent_Declare(
+#  lodepng
+#  GIT_REPOSITORY https://github.com/lvandeve/lodepng.git
+#  GIT_TAG master
+#)
+#FetchContent_MakeAvailable(lodepng)
 
 # Add source files 
 set(SRC_FILES
@@ -53,7 +53,8 @@ set(SRC_FILES
     modules/lib_gen/src/Image.cpp
     modules/lib_gen/src/LibGenerator.cpp
     modules/lib_gen/src/TileExtractor.cpp
-    ${lodepng_SOURCE_DIR}/lodepng.cpp  # Explicitly include lodepng.cpp
+    modules/lib_gen/src/TileConfig.cpp
+    #${lodepng_SOURCE_DIR}/lodepng.cpp  # Explicitly include lodepng.cpp
     ${base64_SOURCE_DIR}/base64.cpp    # Explicitly include base64.cpp
 )
 
@@ -63,7 +64,7 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 # Inclure les répertoires d'en-tête pour les modules et les dépendances tierces
 target_include_directories(${PROJECT_NAME} PRIVATE 
   ${stb_SOURCE_DIR} 
-  ${lodepng_SOURCE_DIR}
+  #${lodepng_SOURCE_DIR}
   ${base64_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/modules/level_gen/include
   ${CMAKE_CURRENT_SOURCE_DIR}/modules/lib_gen/include

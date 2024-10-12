@@ -1,4 +1,4 @@
-#include "Image.h"
+#include "Image.hpp"
 
 #include <stb_image.h>
 

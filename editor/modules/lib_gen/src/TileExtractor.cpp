@@ -1,4 +1,4 @@
-#include "TileExtractor.h"
+#include "TileExtractor.hpp"
 
 #include <stb_image_write.h>
 #include <stdexcept>

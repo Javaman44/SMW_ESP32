@@ -13,3 +13,8 @@ Open components library "components.drawio":
 
 ## credits
 assets found at https://www.mariouniverse.com/sprites-snes-smw/
+
+## tests
+```console
+$ .\SMW_Editor.exe generate ..\..\editor\lib_gen_config.json ..\..\editor\components_test.drawio
+```

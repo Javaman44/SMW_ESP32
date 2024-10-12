@@ -25,9 +25,6 @@ private:
 
     // Méthode pour encoder une image en base64
     std::string encodeImageToBase64(unsigned char* data, int width, int height, int channels);
-
-    // Méthode pour encoder des données en PNG (utilise une bibliothèque PNG comme lodepng)
-    void encodePNG(unsigned char* data, int width, int height, int channels, std::vector<unsigned char>& outPng);
 };
 
 // Déclaration des exceptions personnalisées

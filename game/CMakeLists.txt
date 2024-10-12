@@ -35,17 +35,17 @@ set(PROJECT_SOURCES
   src/user_code.cpp
 )
 
-# Définir l'exécutable
+# Define exe
 add_executable(${PROJECT_NAME}
   ${PROJECT_SOURCES}
   ${LOVYANGFX_SOURCES}
 )
 
-# Spécifier les répertoires des includes (hpp) pour LovyanGFX
+# Add include directories
 target_include_directories(${PROJECT_NAME} PUBLIC 
   ${LOVYANGFX_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Lier SDL2 et LovyanGFX à l'exécutable
+# Link SDL2 and LovyanGFX to binary
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
