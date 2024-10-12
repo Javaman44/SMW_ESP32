@@ -5,6 +5,98 @@
     "tiles": [
         { "title": "Mirror", "id": "MIRROR", "x": 0, "y": 0 },
 
+        { "title": "Flip 1", "id": "FLIP_1", "x": 1, "y": 0 },
+        { "title": "Flip 2", "id": "FLIP_2", "x": 2, "y": 0 },
+        { "title": "Flip 3", "id": "FLIP_3", "x": 3, "y": 0 },
+        { "title": "Flip 4", "id": "FLIP_4", "x": 4, "y": 0 },
+
+        { "title": "Cloud", "id": "CLOUD", "x": 5, "y": 0 },
+        { "title": "Other 1", "id": "OTHER_1", "x": 6, "y": 0 },
+        { "title": "Other 2", "id": "OTHER_2", "x": 7, "y": 0 },
+        { "title": "Other 3", "id": "OTHER_3", "x": 8, "y": 0 },
+
+        { "title": "Wall 1", "id": "WALL_1", "x": 9, "y": 0 },
+        { "title": "Wall 2", "id": "WALL_2", "x": 10, "y": 0 },
+        { "title": "Wall 3", "id": "WALL_3", "x": 11, "y": 0 },
+        { "title": "Wall 4", "id": "WALL_4", "x": 9, "y": 1 },
+        { "title": "Wall 5", "id": "WALL_5", "x": 10, "y": 1 },
+        { "title": "Wall 6", "id": "WALL_6", "x": 11, "y": 1 },
+        { "title": "Wall 6", "id": "WALL_6", "x": 11, "y": 2 },
+
+        { "title": "Pipe Small 1", "id": "PIPE_SMALL_1", "x": 4, "y": 3 },
+        { "title": "Pipe Small 2", "id": "PIPE_SMALL_2", "x": 4, "y": 4 },
+        { "title": "Pipe Small 3", "id": "PIPE_SMALL_3", "x": 4, "y": 5 },
+        { "title": "Pipe Yellow 1", "id": "PIPE_YELLOW_1", "x": 7, "y": 5 },
+        { "title": "Pipe Yellow 2", "id": "PIPE_YELLOW_2", "x": 8, "y": 5 },
+        { "title": "Pipe Yellow 3", "id": "PIPE_YELLOW_3", "x": 9, "y": 5 },
+
+        { "title": "Pipe 1", "id": "PIPE_1", "x": 5, "y": 3 },
+        { "title": "Pipe 2", "id": "PIPE_2", "x": 6, "y": 3 },
+        { "title": "Pipe 3", "id": "PIPE_3", "x": 7, "y": 3 },
+        { "title": "Pipe 4", "id": "PIPE_4", "x": 8, "y": 3 },
+        { "title": "Pipe 5", "id": "PIPE_5", "x": 9, "y": 3 },
+        { "title": "Pipe 6", "id": "PIPE_6", "x": 5, "y": 4 },
+        { "title": "Pipe 7", "id": "PIPE_7", "x": 6, "y": 4 },
+        { "title": "Pipe 8", "id": "PIPE_8", "x": 7, "y": 4 },
+        { "title": "Pipe 9", "id": "PIPE_9", "x": 8, "y": 4 },
+        { "title": "Pipe 10", "id": "PIPE_10", "x": 9, "y": 4 },
+        { "title": "Pipe 11", "id": "PIPE_11", "x": 5, "y": 5 },
+        { "title": "Pipe 12", "id": "PIPE_12", "x": 6, "y": 5 },
+
+        
+        { "title": "Stone Floor 1", "id": "STONE_FLOOR_1", "x": 12, "y": 0 },
+        { "title": "Stone Floor 2", "id": "STONE_FLOOR_2", "x": 13, "y": 0 },
+        { "title": "Stone Floor 3", "id": "STONE_FLOOR_3", "x": 14, "y": 0 },
+        { "title": "Stone Floor 4", "id": "STONE_FLOOR_4", "x": 15, "y": 0 },
+        { "title": "Stone Floor 5", "id": "STONE_FLOOR_5", "x": 16, "y": 0 },
+        { "title": "Stone Floor 6", "id": "STONE_FLOOR_6", "x": 12, "y": 1 },
+        { "title": "Stone Floor 7", "id": "STONE_FLOOR_7", "x": 13, "y": 1 },
+        { "title": "Stone Floor 8", "id": "STONE_FLOOR_8", "x": 14, "y": 1 },
+        { "title": "Stone Floor 9", "id": "STONE_FLOOR_9", "x": 15, "y": 1 },
+        { "title": "Stone Floor 10", "id": "STONE_FLOOR_10", "x": 16, "y": 1 },
+
+        { "title": "Purple Box", "id": "PURPLE_BOX", "x": 0, "y": 1 },
+        { "title": "Question Box 1", "id": "QUESTION_BOX_1", "x": 1, "y": 1 },
+        { "title": "Question Box 2", "id": "QUESTION_BOX_2", "x": 2, "y": 1 },
+        { "title": "Question Box 3", "id": "QUESTION_BOX_3", "x": 3, "y": 1 },
+        { "title": "Question Box 4", "id": "QUESTION_BOX_4", "x": 4, "y": 1 },
+
+        { "title": "Door 1", "id": "DOOR_1", "x": 5, "y": 1 },
+        { "title": "Door 2", "id": "DOOR_2", "x": 5, "y": 2 },
+        { "title": "Door Boss 1", "id": "DOOR_BOOS_1", "x": 13, "y": 17 },
+        { "title": "Door Boss 2", "id": "DOOR_BOOS_2", "x": 14, "y": 17 },
+        { "title": "Door Boss 3", "id": "DOOR_BOOS_3", "x": 13, "y": 18 },
+        { "title": "Door Boss 4", "id": "DOOR_BOOS_4", "x": 14, "y": 18 },
+        { "title": "Door Boss 5", "id": "DOOR_BOOS_5", "x": 13, "y": 19 },
+        { "title": "Door Boss 6", "id": "DOOR_BOOS_6", "x": 14, "y": 19 },
+
+        { "title": "Plant 1", "id": "PLANT_1", "x": 6, "y": 1 },
+        { "title": "Plant 2", "id": "PLANT_2", "x": 7, "y": 1 },
+        { "title": "Plant 3", "id": "PLANT_3", "x": 8, "y": 1 },
+        { "title": "Plant 4", "id": "PLANT_4", "x": 6, "y": 2 },
+        { "title": "Plant 5", "id": "PLANT_5", "x": 7, "y": 2 },
+        { "title": "Plant 6", "id": "PLANT_6", "x": 8, "y": 2 },
+
+        { "title": "Stone Box", "id": "STONE_BOX", "x": 0, "y": 2 },
+        { "title": "Music 1", "id": "MUSIC_1", "x": 0, "y": 2 },
+        { "title": "Music 2", "id": "MUSIC_2", "x": 1, "y": 2 },
+        { "title": "Music 3", "id": "MUSIC_3", "x": 2, "y": 2 },
+        { "title": "Music 4", "id": "MUSIC_4", "x": 3, "y": 2 },
+
+        { "title": "Yellow Circle", "id": "YELLOW_CIRCLE", "x": 9, "y": 2 },
+
+        { "title": "Post Blue 1", "id": "POST_BLUE_1", "x": 10, "y": 2 },
+        { "title": "Post Blue 2", "id": "POST_BLUE_2", "x": 10, "y": 3 },
+        { "title": "Post Purple 1", "id": "POST_PURPLE_1", "x": 10, "y": 4 },
+        { "title": "Post Purple 2", "id": "POST_PURPLE_1", "x": 10, "y": 5 },
+
+        { "title": "Sign 1", "id": "SIGN_1", "x": 11, "y": 3 },
+        { "title": "Sign 2", "id": "SIGN_2", "x": 12, "y": 3 },
+        { "title": "Sign 3", "id": "SIGN_3", "x": 11, "y": 4 },
+        { "title": "Sign 4", "id": "SIGN_4", "x": 12, "y": 4 },
+
+        { "title": "Speaker", "id": "SPEAKER", "x": 5, "y": 6 },
+
         { "title": "Ground 1", "id": "GROUND_1", "x": 0, "y": 6 },
         { "title": "Ground 2", "id": "GROUND_2", "x": 1, "y": 6 },
         { "title": "Ground 3", "id": "GROUND_3", "x": 2, "y": 6 },
@@ -18,6 +110,42 @@
         { "title": "Ground 9", "id": "GROUND_9", "x": 4, "y": 7 },
 
         { "title": "Ground 10", "id": "GROUND_10", "x": 1, "y": 8 },
-        { "title": "Ground 11", "id": "GROUND_11", "x": 3, "y": 8 }
+        { "title": "Ground 11", "id": "GROUND_11", "x": 3, "y": 8 },
+
+        { "title": "Ground 12", "id": "GROUND_11", "x": 0, "y": 9 },
+        { "title": "Ground 13", "id": "GROUND_11", "x": 1, "y": 9 },
+        { "title": "Ground 14", "id": "GROUND_11", "x": 2, "y": 9 },
+        { "title": "Ground 15", "id": "GROUND_11", "x": 3, "y": 9 },
+        { "title": "Ground 16", "id": "GROUND_11", "x": 4, "y": 9 },
+        { "title": "Ground 17", "id": "GROUND_11", "x": 5, "y": 9 },
+        { "title": "Ground 18", "id": "GROUND_11", "x": 6, "y": 9 },
+        { "title": "Ground 19", "id": "GROUND_11", "x": 7, "y": 9 },
+        { "title": "Ground 20", "id": "GROUND_11", "x": 8, "y": 9 },
+        { "title": "Ground 21", "id": "GROUND_11", "x": 9, "y": 9 },
+        { "title": "Ground 22", "id": "GROUND_11", "x": 10, "y": 9 },
+        { "title": "Ground 23", "id": "GROUND_11", "x": 11, "y": 9 },
+        { "title": "Ground 24", "id": "GROUND_11", "x": 12, "y": 9 },
+        { "title": "Ground 25", "id": "GROUND_11", "x": 13, "y": 9 },
+
+        { "title": "Ground 26", "id": "GROUND_26", "x": 0, "y": 10 },
+        { "title": "Ground 27", "id": "GROUND_27", "x": 2, "y": 10 },
+        { "title": "Ground 28", "id": "GROUND_28", "x": 3, "y": 10 },
+        { "title": "Ground 29", "id": "GROUND_29", "x": 4, "y": 10 },
+        { "title": "Ground 30", "id": "GROUND_30", "x": 5, "y": 10 },
+        { "title": "Ground 31", "id": "GROUND_31", "x": 6, "y": 10 },
+        { "title": "Ground 32", "id": "GROUND_32", "x": 7, "y": 10 },
+        { "title": "Ground 33", "id": "GROUND_33", "x": 8, "y": 10 },
+        { "title": "Ground 34", "id": "GROUND_34", "x": 9, "y": 10 },
+        { "title": "Ground 35", "id": "GROUND_35", "x": 10, "y": 10 },
+        { "title": "Ground 36", "id": "GROUND_36", "x": 11, "y": 10 },
+        { "title": "Ground 37", "id": "GROUND_37", "x": 13, "y": 10 },
+
+        { "title": "Ground 38", "id": "GROUND_38", "x": 4, "y": 11 },
+        { "title": "Ground 39", "id": "GROUND_39", "x": 5, "y": 11 },
+        { "title": "Ground 40", "id": "GROUND_40", "x": 6, "y": 11 },
+        { "title": "Ground 41", "id": "GROUND_41", "x": 7, "y": 11 },
+        { "title": "Ground 42", "id": "GROUND_42", "x": 8, "y": 11 },
+        { "title": "Ground 43", "id": "GROUND_43", "x": 9, "y": 11 }
+
     ]
 }

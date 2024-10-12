@@ -102,10 +102,11 @@ cv::Mat LibGenerator::resizeTile(cv::Mat& tileImage) {
     return resizedImage;
 }
 
-// Méthode pour encoder une tuile redimensionnée en base64 au format BMP
+// Méthode pour encoder une tuile redimensionnée en base64 au format PNG
 std::string LibGenerator::encodeTileToBase64(cv::Mat& image) {
     std::vector<uchar> buffer;
-    cv::imencode(".bmp", image, buffer);  // Encoder l'image au format BMP
+    // Utilisation de PNG au lieu de BMP pour gérer le canal alpha
+    cv::imencode(".png", image, buffer);  // Encoder l'image au format PNG
 
     return base64_encode(buffer.data(), buffer.size());  // Encoder en base64
 }
@@ -113,7 +114,7 @@ std::string LibGenerator::encodeTileToBase64(cv::Mat& image) {
 // Méthode pour générer le XML pour une tuile donnée
 std::string LibGenerator::generateXmlForTile(const Tile& tile, const std::string& base64Image) {
     return R"(<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><object label="" Component=")"
-           + tile.id + R"(" id="2"><mxCell style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/bmp,)"
+           + tile.id + R"(" id="2"><mxCell style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/png,)"
            + base64Image + R"(" vertex="1" parent="1"><mxGeometry width="40" height="40" as="geometry"/></mxCell></object></root></mxGraphModel>)";
 }
 
