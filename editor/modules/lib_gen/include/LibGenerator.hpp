@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <TileConfig.hpp>
 #include <opencv2/opencv.hpp>  // Inclusion de la bibliothèque OpenCV
 
 class LibGenerator {
@@ -25,11 +24,11 @@ private:
     // Méthode pour charger l'image à partir du chemin tileset
     cv::Mat loadImage();
 
-    // Méthode pour traiter une tuile (extraction, redimensionnement, génération du XML)
-    std::string processTile(cv::Mat& image, const Tile& tile);
+    // Méthode pour parcourir toutes les tuiles et générer un fichier Draw.io
+    void generateTiles(cv::Mat& image, std::ofstream& outputFile);
 
-    // Méthode pour extraire une tuile de l'image
-    cv::Mat extractTile(cv::Mat& image, const Tile& tile);
+    // Méthode pour vérifier si une tuile est non vide
+    bool isTileNonEmpty(const cv::Mat& tile);
 
     // Méthode pour redimensionner une tuile à 40x40 pixels
     cv::Mat resizeTile(cv::Mat& tileImage);
@@ -38,7 +37,7 @@ private:
     std::string encodeTileToBase64(cv::Mat& resizedTileImage);
 
     // Méthode pour générer le XML pour une tuile donnée
-    std::string generateXmlForTile(const Tile& tile, const std::string& base64Image);
+    std::string generateXmlForTile(const std::string& id, const std::string& base64Image, const std::string& title);
 };
 
 // Déclaration des exceptions personnalisées

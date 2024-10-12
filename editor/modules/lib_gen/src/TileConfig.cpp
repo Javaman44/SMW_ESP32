@@ -29,14 +29,6 @@ TileConfig readTileConfig(const std::string& jsonMappingFile) {
     config.tileHeight = configJson["tileHeight"];
     config.tilesetPath = configJson["tilesetPath"];
 
-    for (const auto& tile : configJson["tiles"]) {
-        std::string title = tile["title"];
-        std::string id = tile["id"];
-        int x = tile["x"];
-        int y = tile["y"];
-        config.tiles.push_back({title, id, x, y});
-    }
-
     return config;
 }
 
@@ -44,13 +36,7 @@ TileConfig readTileConfig(const std::string& jsonMappingFile) {
 void printTileConfig(const TileConfig& config) {
     std::cout << "Tileset Path: " << config.tilesetPath << std::endl;
     std::cout << "Tile Width: " << config.tileWidth << std::endl;
-    std::cout << "Tile Height: " << config.tileHeight << std::endl;
-    std::cout << "Tiles:" << std::endl;
-    for (const auto& tile : config.tiles) {
-        std::cout << "  Title: " << tile.title
-                  << " Id: " << tile.id
-                  << " Position: (" << tile.x << ", " << tile.y << ")" << std::endl;
-    }
+    std::cout << "Tile Height: " << config.tileHeight << std::endl;    
 }
 
 // Fonction utilitaire pour vérifier la présence et le type d'une clé dans un objet JSON
@@ -71,13 +57,4 @@ void validateTileConfigJson(const nlohmann::json& configJson) {
     checkJsonKey(configJson, "tilesetPath", "string");
     checkJsonKey(configJson, "tileWidth", "number");
     checkJsonKey(configJson, "tileHeight", "number");
-    checkJsonKey(configJson, "tiles", "array");
-
-    // Vérification des éléments dans "tiles"
-    for (const auto& tile : configJson["tiles"]) {
-        checkJsonKey(tile, "title", "string");
-        checkJsonKey(tile, "id", "string");
-        checkJsonKey(tile, "x", "number");
-        checkJsonKey(tile, "y", "number");
-    }
 }

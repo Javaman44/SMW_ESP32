@@ -1,6 +1,4 @@
 #include "LibGenerator.hpp"
-#include "TileConfig.hpp"
-
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
@@ -37,7 +35,6 @@ LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile
 }
 
 void LibGenerator::build(const std::string& outputDrawioFile) {
-    TileConfig config = readTileConfig(jsonMappingFile);
     cv::Mat image = loadImage();  // Utilisation d'OpenCV pour charger l'image
 
     std::ofstream outputFile(outputDrawioFile);
@@ -47,25 +44,46 @@ void LibGenerator::build(const std::string& outputDrawioFile) {
 
     outputFile << "<mxlibrary>[\n";
     
-    for (const auto& tile : config.tiles) {
-        std::string xmlData = processTile(image, tile);
-        std::string escapedXml = escapeXml(xmlData);
+    int tileSize = 16;  // Taille de chaque tuile
+    int tileSpacing = 1;  // Espacement entre les tuiles si applicable
+    int numColumns = image.cols / (tileSize + tileSpacing);
+    int numRows = image.rows / (tileSize + tileSpacing);
 
-        outputFile << "  {\n";
-        outputFile << "    \"xml\": \"" << escapedXml << "\",\n";
-        outputFile << "    \"w\": 40,\n";
-        outputFile << "    \"h\": 40,\n";
-        outputFile << "    \"aspect\": \"fixed\",\n";
-        outputFile << "    \"title\": \"" << tile.title << "\"\n";
-        outputFile << "  }";
+    bool firstTile = true;  // Pour éviter la virgule après la dernière tuile
+    for (int row = 0; row < numRows; ++row) {
+        for (int col = 0; col < numColumns; ++col) {
+            cv::Rect roi(col * (tileSize + tileSpacing), row * (tileSize + tileSpacing), tileSize, tileSize);
+            cv::Mat tileImage = image(roi);
 
-        if (&tile != &config.tiles.back()) {
-            outputFile << ",";
+            // Vérifier si l'image de la tuile est non vide
+            if (isTileNonEmpty(tileImage)) {
+                std::string title = "Tile (" + std::to_string(col) + "," + std::to_string(row) + ")";
+                std::string id = "tile_" + std::to_string(col) + "_" + std::to_string(row);
+                
+                // Traiter la tuile : redimensionnement, encodage, etc.
+                cv::Mat resizedTileImage = resizeTile(tileImage);
+                std::string base64Image = encodeTileToBase64(resizedTileImage);
+                std::string xmlData = generateXmlForTile(id, base64Image, title);
+                std::string escapedXml = escapeXml(xmlData);
+
+                // Ajouter une virgule avant chaque tuile sauf la première
+                if (!firstTile) {
+                    outputFile << ",\n";
+                }
+                outputFile << "  {\n";
+                outputFile << "    \"xml\": \"" << escapedXml << "\",\n";
+                outputFile << "    \"w\": 40,\n";
+                outputFile << "    \"h\": 40,\n";
+                outputFile << "    \"aspect\": \"fixed\",\n";
+                outputFile << "    \"title\": \"" << title << "\"\n";
+                outputFile << "  }";
+
+                firstTile = false;  // La première tuile a été écrite
+            }
         }
-        outputFile << "\n";
     }
 
-    outputFile << "]</mxlibrary>";
+    outputFile << "\n]</mxlibrary>";
     outputFile.close();
 }
 
@@ -78,21 +96,13 @@ cv::Mat LibGenerator::loadImage() {
     return image;
 }
 
-// Méthode pour traiter une tuile (extraction, redimensionnement, génération du XML)
-std::string LibGenerator::processTile(cv::Mat& image, const Tile& tile) {
-    cv::Mat tileImage = extractTile(image, tile);
-    cv::Mat resizedTileImage = resizeTile(tileImage);
-
-    std::string base64Image = encodeTileToBase64(resizedTileImage);
-    return generateXmlForTile(tile, base64Image);
-}
-
-// Méthode pour extraire une tuile de 16x16 pixels
-cv::Mat LibGenerator::extractTile(cv::Mat& image, const Tile& tile) {
-    int tileX = tile.x;
-    int tileY = tile.y;
-    cv::Rect roi(tileX * 17, tileY * 17, 16, 16);  // Définir la région de 16x16 pixels
-    return image(roi).clone();  // Extraire et cloner la tuile
+// Méthode pour vérifier si une tuile est vide (par exemple, entièrement transparente ou noire)
+bool LibGenerator::isTileNonEmpty(const cv::Mat& tile) {
+    cv::Mat grayTile;
+    cv::cvtColor(tile, grayTile, cv::COLOR_BGR2GRAY);  // Convertir en niveaux de gris
+    double minVal, maxVal;
+    cv::minMaxLoc(grayTile, &minVal, &maxVal);
+    return maxVal > 0;  // Si maxVal > 0, la tuile n'est pas vide
 }
 
 // Méthode pour redimensionner une tuile à 40x40 pixels
@@ -112,9 +122,9 @@ std::string LibGenerator::encodeTileToBase64(cv::Mat& image) {
 }
 
 // Méthode pour générer le XML pour une tuile donnée
-std::string LibGenerator::generateXmlForTile(const Tile& tile, const std::string& base64Image) {
+std::string LibGenerator::generateXmlForTile(const std::string& id, const std::string& base64Image, const std::string& title) {
     return R"(<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><object label="" Component=")"
-           + tile.id + R"(" id="2"><mxCell style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/png,)"
+           + id + R"(" id="2"><mxCell style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/png,)"
            + base64Image + R"(" vertex="1" parent="1"><mxGeometry width="40" height="40" as="geometry"/></mxCell></object></root></mxGraphModel>)";
 }
 
