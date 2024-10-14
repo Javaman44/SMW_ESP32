@@ -2,6 +2,7 @@
 #include "JsonWriter.hpp"
 #include "XmlExtractor.hpp"
 
+/*
 LevelConverter::LevelConverter(const std::string& xmlPath) : xmlPath(xmlPath) {}
 
 void LevelConverter::convertToJson(const std::string& outputJsonFile) const {
@@ -9,3 +10,4 @@ void LevelConverter::convertToJson(const std::string& outputJsonFile) const {
     std::vector<Component> components = extractor.extractComponents();
     JsonWriter::toFile(components, outputJsonFile);
 }
+*/

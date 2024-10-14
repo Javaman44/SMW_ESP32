@@ -5,12 +5,12 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlstring.h>
-#include <base64.h>
 #include <nlohmann/json.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <cstring>
+#include <b64/encode.h>  // Inclusion pour libb64
 
 // Prototypes of utility functions
 std::string escapeXmlWithLibXml2(const std::string& data);
@@ -37,7 +37,9 @@ LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile
 }
 
 void LibGenerator::build(const std::string& outputDrawioFile) {
-    cv::Mat image = loadImage();  // Utilisation d'OpenCV pour charger l'image
+    
+    // Utilisation d'OpenCV pour charger l'image
+    cv::Mat image = loadImage();  
 
     // Créer un nouveau document XML
     xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
@@ -156,14 +158,26 @@ cv::Mat LibGenerator::resizeTile(cv::Mat& tileImage) {
     return resizedImage;
 }
 
-// Méthode pour encoder une tuile redimensionnée en base64 au format PNG
+// Méthode pour encoder une tuile redimensionnée en base64 au format PNG avec libb64
 std::string LibGenerator::encodeTileToBase64(cv::Mat& image) {
     std::vector<uchar> buffer;
     // Utilisation de PNG au lieu de BMP pour gérer le canal alpha
     cv::imencode(".png", image, buffer);  // Encoder l'image au format PNG
 
-    return base64_encode(buffer.data(), buffer.size());  // Encoder en base64
+    // Instancier l'encodeur base64
+    base64::encoder encoder;
+
+    // Préparer les flux pour encoder les données de l'image
+    std::istringstream inputStream(std::string(buffer.begin(), buffer.end()));  // Convertir les données PNG en flux d'entrée
+    std::ostringstream outputStream;  // Flux de sortie pour stocker les données encodées en base64
+
+    // Encoder les données de l'image en base64
+    encoder.encode(inputStream, outputStream);
+
+    // Retourner les données encodées en base64
+    return outputStream.str();
 }
+
 
 // Méthode pour générer le XML pour une tuile donnée
 void LibGenerator::generateXmlForTile(xmlDocPtr doc, xmlNodePtr rootNode, const std::string& id, const std::string& base64Image, const std::string& title) {

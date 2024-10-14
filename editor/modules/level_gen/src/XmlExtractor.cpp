@@ -1,6 +1,6 @@
 #include "XmlExtractor.hpp"
 #include <stdexcept>
-
+/*/
 using namespace tinyxml2;
 
 XmlExtractor::XmlExtractor(const std::string& xmlPath) {
@@ -49,3 +49,4 @@ std::vector<Component> XmlExtractor::extractComponents() const {
 
     return components;
 }
+*/

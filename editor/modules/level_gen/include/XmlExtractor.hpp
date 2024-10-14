@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "tinyxml2.h"
+// #include "tinyxml2.h"
 
 // Structure pour stocker les données de chaque composant
 struct Component {
@@ -20,8 +20,8 @@ public:
     explicit XmlExtractor(const std::string& xmlPath);
     std::vector<Component> extractComponents() const;
 
-private:
-    tinyxml2::XMLDocument doc;
+//private:
+    //tinyxml2::XMLDocument doc;
 };
 
 #endif // XML_COMPONENT_EXTRACTOR_HPP

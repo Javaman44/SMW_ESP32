@@ -7,6 +7,7 @@
 #include <opencv2/opencv.hpp>  // Inclusion de la bibliothèque OpenCV
 #include <libxml/parser.h>     // Inclusion pour libxml2
 #include <libxml/tree.h>       // Inclusion pour libxml2
+#include <b64/encode.h>       // Inclusion pour l'encodage base64 avec libb64
 
 class LibGenerator {
 public:
@@ -26,8 +27,8 @@ private:
     // Méthode pour charger l'image à partir du chemin tileset
     cv::Mat loadImage();
 
-    // Méthode pour parcourir toutes les tuiles et générer un fichier Draw.io
-    void generateTiles(cv::Mat& image, xmlDocPtr doc, xmlNodePtr rootNode);
+    // Méthode pour traiter chaque tuile
+    void processTile(int row, int col, const cv::Mat& image, int tileSize, int tileSpacing, xmlNodePtr rootNode, xmlDocPtr doc);
 
     // Méthode pour vérifier si une tuile est non vide
     bool isTileNonEmpty(const cv::Mat& tile);
@@ -35,14 +36,20 @@ private:
     // Méthode pour redimensionner une tuile à 40x40 pixels
     cv::Mat resizeTile(cv::Mat& tileImage);
 
-    // Méthode pour encoder une image redimensionnée en base64
+    // Méthode pour encoder une image redimensionnée en base64 avec libb64
     std::string encodeTileToBase64(cv::Mat& resizedTileImage);
 
     // Méthode pour générer le XML pour une tuile donnée
     void generateXmlForTile(xmlDocPtr doc, xmlNodePtr rootNode, const std::string& id, const std::string& base64Image, const std::string& title);
 
-    // Méthode pour utiliser libxml2 pour échapper le contenu XML
+    // Méthode pour échapper le contenu XML en utilisant libxml2
+    std::string generateEscapedXmlForTile(const std::string& id, const std::string& base64Image, const std::string& title);
+
+    // Méthode pour échapper le XML avec libxml2
     std::string escapeXmlWithLibXml2(const std::string& data);
+
+    // Méthode pour générer le JSON pour une tuile donnée
+    std::string generateJsonForTile(const std::string& escapedXml, const std::string& title);
 };
 
 // Déclaration des exceptions personnalisées
