@@ -100,7 +100,8 @@ cv::Mat LibGenerator::loadImage() {
 bool LibGenerator::isTileNonEmpty(const cv::Mat& tile) {
     cv::Mat grayTile;
     cv::cvtColor(tile, grayTile, cv::COLOR_BGR2GRAY);  // Convertir en niveaux de gris
-    double minVal, maxVal;
+    double minVal;
+    double maxVal;
     cv::minMaxLoc(grayTile, &minVal, &maxVal);
     return maxVal > 0;  // Si maxVal > 0, la tuile n'est pas vide
 }
