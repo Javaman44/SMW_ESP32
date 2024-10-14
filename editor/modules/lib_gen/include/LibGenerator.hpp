@@ -5,6 +5,8 @@
 #include <vector>
 #include <stdexcept>
 #include <opencv2/opencv.hpp>  // Inclusion de la bibliothèque OpenCV
+#include <libxml/parser.h>     // Inclusion pour libxml2
+#include <libxml/tree.h>       // Inclusion pour libxml2
 
 class LibGenerator {
 public:
@@ -25,7 +27,7 @@ private:
     cv::Mat loadImage();
 
     // Méthode pour parcourir toutes les tuiles et générer un fichier Draw.io
-    void generateTiles(cv::Mat& image, std::ofstream& outputFile);
+    void generateTiles(cv::Mat& image, xmlDocPtr doc, xmlNodePtr rootNode);
 
     // Méthode pour vérifier si une tuile est non vide
     bool isTileNonEmpty(const cv::Mat& tile);
@@ -37,7 +39,10 @@ private:
     std::string encodeTileToBase64(cv::Mat& resizedTileImage);
 
     // Méthode pour générer le XML pour une tuile donnée
-    std::string generateXmlForTile(const std::string& id, const std::string& base64Image, const std::string& title);
+    void generateXmlForTile(xmlDocPtr doc, xmlNodePtr rootNode, const std::string& id, const std::string& base64Image, const std::string& title);
+
+    // Méthode pour utiliser libxml2 pour échapper le contenu XML
+    std::string escapeXmlWithLibXml2(const std::string& data);
 };
 
 // Déclaration des exceptions personnalisées

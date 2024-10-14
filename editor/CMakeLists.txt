@@ -1,14 +1,12 @@
 project(SMW_Editor)
 
-# Télécharger tinyxml2
+# Télécharger libxml2
 FetchContent_Declare(
-  tinyxml2
-  GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
-  GIT_TAG        master  # ou choisissez une version spécifique
+  libxml2
+  GIT_REPOSITORY https://gitlab.gnome.org/GNOME/libxml2.git
+  GIT_TAG        v2.13.4
 )
-
-# Charger tinyxml2
-FetchContent_MakeAvailable(tinyxml2)
+FetchContent_MakeAvailable(libxml2)
 
 # Utiliser FetchContent pour inclure nlohmann/json
 FetchContent_Declare(
@@ -25,14 +23,6 @@ FetchContent_Declare(
   GIT_TAG master  # Choisissez une version spécifique si nécessaire
 )
 FetchContent_MakeAvailable(base64)
-
-# Témécharge CImg (manipulation d'image)
-FetchContent_Declare(
-  cimg
-  GIT_REPOSITORY https://github.com/dtschump/CImg.git
-  GIT_TAG v.3.4.3
-)
-FetchContent_MakeAvailable(cimg)
 
 # Set the path to the OpenCV installed by MSYS2
 set(OpenCV_DIR "C:/msys64/ucrt64/lib/opencv4")
@@ -67,6 +57,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # Lier les bibliothèques json et tinyxml2 à votre cible
 target_link_libraries(${PROJECT_NAME} PRIVATE 
   nlohmann_json::nlohmann_json 
-  tinyxml2
+  libxml2
   ${OpenCV_LIBS}
 ) 
