@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "tinyxml2.h"
+#include <pugixml.hpp>  // Include pugixml instead of tinyxml2
 
 // Structure pour stocker les données de chaque composant
 struct Component {
@@ -21,7 +21,7 @@ public:
     std::vector<Component> extractComponents() const;
 
 private:
-    tinyxml2::XMLDocument doc;
+    pugi::xml_document doc;  // Use pugi::xml_document instead of tinyxml2::XMLDocument
 };
 
 #endif // XML_COMPONENT_EXTRACTOR_HPP

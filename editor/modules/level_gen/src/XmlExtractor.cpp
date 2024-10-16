@@ -1,46 +1,53 @@
 #include "XmlExtractor.hpp"
 #include <stdexcept>
-
-using namespace tinyxml2;
+#include <pugixml.hpp>
 
 XmlExtractor::XmlExtractor(const std::string& xmlPath) {
-    if (doc.LoadFile(xmlPath.c_str()) != XML_SUCCESS) {
+    pugi::xml_parse_result result = doc.load_file(xmlPath.c_str());
+    if (!result) {
         throw std::runtime_error("Failed to load XML file");
     }
 }
 
 std::vector<Component> XmlExtractor::extractComponents() const {
     std::vector<Component> components;
-    const XMLElement* mxfile = doc.RootElement();
+    
+    // Get the root element (equivalent to <mxfile>)
+    pugi::xml_node mxfile = doc.child("mxfile");
     if (!mxfile) {
         throw std::runtime_error("No <mxfile> element found in the XML");
     }
 
-    const XMLElement* diagram = mxfile->FirstChildElement("diagram");
+    // Get the first <diagram> element
+    pugi::xml_node diagram = mxfile.child("diagram");
     if (!diagram) {
         throw std::runtime_error("No <diagram> element found in the XML");
     }
 
-    const XMLElement* graphModel = diagram->FirstChildElement("mxGraphModel");
+    // Get the first <mxGraphModel> element
+    pugi::xml_node graphModel = diagram.child("mxGraphModel");
     if (!graphModel) {
         throw std::runtime_error("No <mxGraphModel> element found in the XML");
     }
 
-    const XMLElement* root = graphModel->FirstChildElement("root");
+    // Get the first <root> element
+    pugi::xml_node root = graphModel.child("root");
     if (!root) {
         throw std::runtime_error("No <root> element found in the XML");
     }
 
-    for (const XMLElement* obj = root->FirstChildElement("object"); obj != nullptr; obj = obj->NextSiblingElement("object")) {
-        const char* id = obj->Attribute("id");
-        const char* componentType = obj->Attribute("Component");
+    // Iterate over each <object> element
+    for (pugi::xml_node obj = root.child("object"); obj; obj = obj.next_sibling("object")) {
+        const char* id = obj.attribute("id").value();
+        const char* componentType = obj.attribute("Component").value();
 
-        const XMLElement* geometry = obj->FirstChildElement("mxCell")->FirstChildElement("mxGeometry");
+        pugi::xml_node mxCell = obj.child("mxCell");
+        pugi::xml_node geometry = mxCell.child("mxGeometry");
         if (geometry) {
-            double x = geometry->DoubleAttribute("x");
-            double y = geometry->DoubleAttribute("y");
-            double width = geometry->DoubleAttribute("width");
-            double height = geometry->DoubleAttribute("height");
+            double x = geometry.attribute("x").as_double();
+            double y = geometry.attribute("y").as_double();
+            double width = geometry.attribute("width").as_double();
+            double height = geometry.attribute("height").as_double();
 
             Component comp = {id ? id : "", componentType ? componentType : "", x, y, width, height};
             components.push_back(comp);

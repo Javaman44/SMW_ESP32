@@ -2,9 +2,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xmlstring.h>
+#include <pugixml.hpp>  // Use pugixml instead of tinyxml2
 #include <base64.h>
 #include <nlohmann/json.hpp>
 #include <opencv2/opencv.hpp>
@@ -12,9 +10,7 @@
 #include <opencv2/imgproc.hpp>
 #include <cstring>
 
-// Prototypes of utility functions
-std::string escapeXmlWithLibXml2(const std::string& data);
-
+// Constructor to initialize the generator with a JSON mapping file
 LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile(jsonMappingFile) {
     std::ifstream jsonFile(jsonMappingFile);
     if (!jsonFile.is_open()) {
@@ -36,98 +32,123 @@ LibGenerator::LibGenerator(const std::string& jsonMappingFile) : jsonMappingFile
     }
 }
 
+// Method to build the output XML for draw.io
 void LibGenerator::build(const std::string& outputDrawioFile) {
-    cv::Mat image = loadImage();  // Utilisation d'OpenCV pour charger l'image
+    cv::Mat image = loadImage();  // Use OpenCV to load the image
 
-    // Créer un nouveau document XML
-    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
-    xmlNodePtr rootNode = xmlNewNode(NULL, BAD_CAST "mxlibrary");
-    xmlDocSetRootElement(doc, rootNode);
+    // Create a new pugixml document
+    pugi::xml_document doc;
+    pugi::xml_node root = doc.append_child("mxlibrary");
 
-    int tileSize = 16;  // Taille de chaque tuile
-    int tileSpacing = 1;  // Espacement entre les tuiles si applicable
+    nlohmann::json jsonArray = nlohmann::json::array();  // Initialize JSON array
+
+    int tileSize = 16;  // Tile size
+    int tileSpacing = 1;  // Tile spacing
     int numColumns = image.cols / (tileSize + tileSpacing);
     int numRows = image.rows / (tileSize + tileSpacing);
-    
-    // Parcours des tuiles et traitement
+
+    // Process each tile and add it to the JSON array
     for (int row = 0; row < numRows; ++row) {
         for (int col = 0; col < numColumns; ++col) {
-            processTile(row, col, image, tileSize, tileSpacing, rootNode, doc);
+            processTile(row, col, image, tileSize, tileSpacing, jsonArray);
         }
     }
 
-    // Sauvegarder le document XML généré dans un fichier
-    xmlSaveFormatFileEnc(outputDrawioFile.c_str(), doc, "UTF-8", 1);
+    // Convert the JSON array to a string and add it as text inside the <mxlibrary> element
+    std::string jsonString = jsonArray.dump(4);  // JSON string with indentation
+    root.append_child(pugi::node_pcdata).set_value(jsonString.c_str());
 
-    // Libérer les ressources
-    xmlFreeDoc(doc);
-    xmlCleanupParser();
+    // Save the document to a file
+    doc.save_file(outputDrawioFile.c_str(), "", pugi::format_raw | pugi::format_no_declaration);    
 }
 
-// Nouvelle méthode pour traiter chaque tuile
-void LibGenerator::processTile(int row, int col, const cv::Mat& image, int tileSize, int tileSpacing, xmlNodePtr rootNode, xmlDocPtr doc) {
+// Method to process each tile and add its data to the JSON array
+void LibGenerator::processTile(int row, int col, const cv::Mat& image, int tileSize, int tileSpacing, nlohmann::json& jsonArray) {
     cv::Rect roi(col * (tileSize + tileSpacing), row * (tileSize + tileSpacing), tileSize, tileSize);
     cv::Mat tileImage = image(roi);
 
-    // Vérifier si l'image de la tuile est non vide
     if (isTileNonEmpty(tileImage)) {
         std::string title = "Tile (" + std::to_string(col) + "," + std::to_string(row) + ")";
         std::string id = "tile_" + std::to_string(col) + "_" + std::to_string(row);
 
-        // Traiter la tuile : redimensionnement, encodage, etc.
+        // Resize and encode the tile to base64
         cv::Mat resizedTileImage = resizeTile(tileImage);
         std::string base64Image = encodeTileToBase64(resizedTileImage);
 
-        // Générer le XML échappé
+        // Generate the escaped XML
         std::string escapedXml = generateEscapedXmlForTile(id, base64Image, title);
 
-        // Générer le JSON pour la tuile
-        std::string jsonString = generateJsonForTile(escapedXml, title);
+        // Generate the JSON object for the tile
+        nlohmann::json tileJson;
+        tileJson["xml"] = escapedXml;
+        tileJson["w"] = 40;
+        tileJson["h"] = 40;
+        tileJson["aspect"] = "fixed";
+        tileJson["title"] = title;
 
-        // Ajouter le JSON dans le document XML
-        xmlNodePtr jsonElement = xmlNewChild(rootNode, NULL, BAD_CAST "data", BAD_CAST jsonString.c_str());
+        // Add the tile JSON object to the JSON array
+        jsonArray.push_back(tileJson);
     }
 }
 
-// Utiliser libxml2 pour échapper le XML
+// Method to generate escaped XML for a tile
 std::string LibGenerator::generateEscapedXmlForTile(const std::string& id, const std::string& base64Image, const std::string& title) {
-    xmlDocPtr innerDoc = xmlNewDoc(BAD_CAST "1.0");
-    xmlNodePtr rootNode = xmlNewNode(NULL, BAD_CAST "mxGraphModel");
-    xmlDocSetRootElement(innerDoc, rootNode);
+    pugi::xml_document innerDoc;
+    pugi::xml_node root = innerDoc.append_child("mxGraphModel");
 
-    generateXmlForTile(innerDoc, rootNode, id, base64Image, title);
+    generateXmlForTile(innerDoc, root, id, base64Image, title);
 
-    xmlChar* xmlBuff;
-    int buffersize;
-    xmlDocDumpFormatMemory(innerDoc, &xmlBuff, &buffersize, 1);
+    // Convert the document to a string
+    std::ostringstream xmlStream;
+    innerDoc.save(xmlStream, "", pugi::format_raw | pugi::format_no_declaration);  
 
-    std::string rawXml((char*)xmlBuff);
-    std::string escapedXml = escapeXmlWithLibXml2(rawXml);
+    // Apply manual escape function to ensure proper escaping
+    return xmlStream.str();
+}
+
+// Custom method to escape special characters in XML
+std::string LibGenerator::escapeXml(const std::string& data) {
+    std::string escaped;
+    for (char c : data) {
+        switch (c) {
+            case '&':  escaped.append("&amp;"); break;
+            case '<':  escaped.append("&lt;"); break;
+            case '>':  escaped.append("&gt;"); break;
+            case '"':  escaped.append("&quot;"); break;  // Properly escape quotes as &quot;
+            case '\'': escaped.append("&apos;"); break;  // Properly escape single quotes
+            default:   escaped.push_back(c); break;
+        }
+    }
+    return escaped;
+}
+
+// Method to generate the XML structure for a tile using pugixml
+void LibGenerator::generateXmlForTile(pugi::xml_document& doc, pugi::xml_node& rootNode, const std::string& id, const std::string& base64Image, const std::string& title) {
     
-    xmlFree(xmlBuff);
-    xmlFreeDoc(innerDoc);
+    pugi::xml_node root = rootNode.append_child("root");
 
-    return escapedXml;
-}
+    pugi::xml_node cell0 = root.append_child("mxCell");
+    cell0.append_attribute("id") = "0";
 
-// Nouvelle méthode pour échapper le XML en utilisant libxml2
-std::string escapeXmlWithLibXml2(const std::string& data) {
-    xmlChar* escapedXml = xmlEncodeEntitiesReentrant(NULL, BAD_CAST data.c_str());
-    std::string escapedStr((const char*)escapedXml);  // Convertir en std::string
-    xmlFree(escapedXml);  // Libérer la mémoire allouée par libxml2
-    return escapedStr;
-}
+    pugi::xml_node cell1 = root.append_child("mxCell");
+    cell1.append_attribute("id") = "1";
+    cell1.append_attribute("parent") = "0";
 
-// Nouvelle méthode pour générer le JSON pour une tuile
-std::string LibGenerator::generateJsonForTile(const std::string& escapedXml, const std::string& title) {
-    nlohmann::json jsonData;
-    jsonData["xml"] = escapedXml;
-    jsonData["w"] = 40;
-    jsonData["h"] = 40;
-    jsonData["aspect"] = "fixed";
-    jsonData["title"] = title;
+    pugi::xml_node object = root.append_child("object");
+    object.append_attribute("label") = "";
+    object.append_attribute("Component") = id.c_str();
+    object.append_attribute("id") = "2";
 
-    return jsonData.dump(4);  // Convertir le contenu JSON en chaîne avec indentation
+    pugi::xml_node mxCell = object.append_child("mxCell");
+    std::string styleValue = "shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/png," + base64Image;
+    mxCell.append_attribute("style") = styleValue.c_str();
+    mxCell.append_attribute("vertex") = "1";
+    mxCell.append_attribute("parent") = "1";
+
+    pugi::xml_node mxGeometry = mxCell.append_child("mxGeometry");
+    mxGeometry.append_attribute("width") = "40";
+    mxGeometry.append_attribute("height") = "40";
+    mxGeometry.append_attribute("as") = "geometry";
 }
 
 // Méthode pour charger l'image avec OpenCV
@@ -165,33 +186,3 @@ std::string LibGenerator::encodeTileToBase64(cv::Mat& image) {
     return base64_encode(buffer.data(), buffer.size());  // Encoder en base64
 }
 
-// Méthode pour générer le XML pour une tuile donnée
-void LibGenerator::generateXmlForTile(xmlDocPtr doc, xmlNodePtr rootNode, const std::string& id, const std::string& base64Image, const std::string& title) {
-    // Création des éléments XML en utilisant libxml2
-    xmlNodePtr mxGraphModel = xmlNewChild(rootNode, NULL, BAD_CAST "mxGraphModel", NULL);
-
-    xmlNodePtr root = xmlNewChild(mxGraphModel, NULL, BAD_CAST "root", NULL);
-
-    xmlNodePtr cell0 = xmlNewChild(root, NULL, BAD_CAST "mxCell", NULL);
-    xmlNewProp(cell0, BAD_CAST "id", BAD_CAST "0");
-
-    xmlNodePtr cell1 = xmlNewChild(root, NULL, BAD_CAST "mxCell", NULL);
-    xmlNewProp(cell1, BAD_CAST "id", BAD_CAST "1");
-    xmlNewProp(cell1, BAD_CAST "parent", BAD_CAST "0");
-
-    xmlNodePtr object = xmlNewChild(root, NULL, BAD_CAST "object", NULL);
-    xmlNewProp(object, BAD_CAST "label", BAD_CAST "");
-    xmlNewProp(object, BAD_CAST "Component", BAD_CAST id.c_str());
-    xmlNewProp(object, BAD_CAST "id", BAD_CAST "2");
-
-    xmlNodePtr mxCell = xmlNewChild(object, NULL, BAD_CAST "mxCell", NULL);
-    std::string styleValue = "shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=data:image/png," + base64Image;
-    xmlNewProp(mxCell, BAD_CAST "style", BAD_CAST styleValue.c_str());
-    xmlNewProp(mxCell, BAD_CAST "vertex", BAD_CAST "1");
-    xmlNewProp(mxCell, BAD_CAST "parent", BAD_CAST "1");
-
-    xmlNodePtr mxGeometry = xmlNewChild(mxCell, NULL, BAD_CAST "mxGeometry", NULL);
-    xmlNewProp(mxGeometry, BAD_CAST "width", BAD_CAST "40");
-    xmlNewProp(mxGeometry, BAD_CAST "height", BAD_CAST "40");
-    xmlNewProp(mxGeometry, BAD_CAST "as", BAD_CAST "geometry");
-}

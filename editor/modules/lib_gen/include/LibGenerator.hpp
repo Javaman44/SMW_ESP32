@@ -1,79 +1,68 @@
-#ifndef DRAWIO_LIBGENERATOR_HPP
-#define DRAWIO_LIBGENERATOR_HPP
+#ifndef LIBGENERATOR_HPP
+#define LIBGENERATOR_HPP
 
 #include <string>
-#include <vector>
-#include <stdexcept>
-#include <opencv2/opencv.hpp>  // Inclusion de la bibliothèque OpenCV
-#include <libxml/parser.h>     // Inclusion pour libxml2
-#include <libxml/tree.h>       // Inclusion pour libxml2
+#include <opencv2/opencv.hpp>
+#include <nlohmann/json.hpp>
+#include <pugixml.hpp>
 
+// Custom exceptions
+class JsonFileOpenException : public std::runtime_error {
+public:
+    explicit JsonFileOpenException(const std::string& filePath)
+        : std::runtime_error("Failed to open JSON file: " + filePath) {}
+};
+
+class JsonParsingException : public std::runtime_error {
+public:
+    explicit JsonParsingException(const std::string& errorMsg)
+        : std::runtime_error("JSON parsing error: " + errorMsg) {}
+};
+
+class ImageLoadException : public std::runtime_error {
+public:
+    explicit ImageLoadException(const std::string& imagePath)
+        : std::runtime_error("Failed to load image: " + imagePath) {}
+};
+
+// LibGenerator class to handle the generation process
 class LibGenerator {
 public:
-    // Constructeur prenant le fichier de configuration JSON en paramètre
     explicit LibGenerator(const std::string& jsonMappingFile);
 
-    // Méthode pour générer le fichier de bibliothèque Draw.io
+    // Build the output XML file for draw.io
     void build(const std::string& outputDrawioFile);
 
 private:
-    // Chemin de l'image tileset
+    std::string jsonMappingFile;
     std::string imagePath;
 
-    // Chemin du fichier de configuration JSON
-    std::string jsonMappingFile;
+    // Process each tile and add its data to the JSON array
+    void processTile(int row, int col, const cv::Mat& image, int tileSize, int tileSpacing, nlohmann::json& jsonArray);
 
-    // Méthode pour charger l'image à partir du chemin tileset
+    // Load the image using OpenCV
     cv::Mat loadImage();
 
-    // Méthode pour parcourir toutes les tuiles et générer un fichier Draw.io
-    void generateTiles(cv::Mat& image, xmlDocPtr doc, xmlNodePtr rootNode);
-
-    // Méthode pour vérifier si une tuile est non vide
+    // Check if a tile is non-empty
     bool isTileNonEmpty(const cv::Mat& tile);
 
-    // Méthode pour redimensionner une tuile à 40x40 pixels
+    // Resize a tile to 40x40 pixels
     cv::Mat resizeTile(cv::Mat& tileImage);
 
-    // Méthode pour encoder une image redimensionnée en base64
-    std::string encodeTileToBase64(cv::Mat& resizedTileImage);
+    // Encode a resized tile in base64
+    std::string encodeTileToBase64(cv::Mat& image);
 
-    // Méthode pour générer le XML pour une tuile donnée
-    void generateXmlForTile(xmlDocPtr doc, xmlNodePtr rootNode, const std::string& id, const std::string& base64Image, const std::string& title);
+    // Generate the XML structure for a tile using pugixml
+    void generateXmlForTile(pugi::xml_document& doc, pugi::xml_node& rootNode, const std::string& id, const std::string& base64Image, const std::string& title);
 
-    // Méthode pour utiliser libxml2 pour échapper le contenu XML
-    std::string escapeXmlWithLibXml2(const std::string& data);
+    // Generate escaped XML for a tile
+    std::string generateEscapedXmlForTile(const std::string& id, const std::string& base64Image, const std::string& title);
+
+    // Custom method to escape special characters in XML
+    std::string escapeXml(const std::string& data);
+
+    // Generate JSON data for a tile
+    std::string generateJsonForTile(const std::string& escapedXml, const std::string& title);
 };
 
-// Déclaration des exceptions personnalisées
-struct JsonFileOpenException : public std::runtime_error {
-    explicit JsonFileOpenException(const std::string& filepath)
-        : std::runtime_error("Failed to open JSON file: " + filepath) {}
-};
-
-struct JsonParsingException : public std::runtime_error {
-    explicit JsonParsingException(const std::string& message)
-        : std::runtime_error("Failed to parse JSON: " + message) {}
-};
-
-struct ImageLoadException : public std::runtime_error {
-    explicit ImageLoadException(const std::string& filepath)
-        : std::runtime_error("Failed to load image: " + filepath) {}
-};
-
-struct TileExtractionException : public std::runtime_error {
-    explicit TileExtractionException()
-        : std::runtime_error("Failed to extract tile data from image.") {}
-};
-
-struct PngEncodingException : public std::runtime_error {
-    explicit PngEncodingException(const std::string& errorMessage)
-        : std::runtime_error("Failed to encode PNG: " + errorMessage) {}
-};
-
-struct XmlSaveException : public std::runtime_error {
-    explicit XmlSaveException(const std::string& filepath)
-        : std::runtime_error("Failed to save XML file: " + filepath) {}
-};
-
-#endif // DRAWIO_LIBGENERATOR_HPP
+#endif  // LIBGENERATOR_HPP
